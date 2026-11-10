@@ -1,5 +1,7 @@
 package pk.wieik.ti.db;
 
+import org.flywaydb.core.Flyway;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,51 +49,16 @@ public final class Database {
     public static void initialize() throws IOException, SQLException {
         Files.createDirectories(DB_FILE.getParent());
 
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute("""
-                CREATE TABLE IF NOT EXISTS uzytkownicy (
-                    id INTEGER PRIMARY KEY,
-                    login TEXT NOT NULL UNIQUE COLLATE NOCASE,
-                    haslo TEXT NOT NULL,
-                    uprawnienia INTEGER NOT NULL DEFAULT 0
-                        CHECK (uprawnienia IN (0, 1, 2))
-                )
-                """);
-
-            statement.execute("""
-                CREATE TABLE IF NOT EXISTS autorzy (
-                    id INTEGER PRIMARY KEY,
-                    imie TEXT NOT NULL,
-                    nazwisko TEXT NOT NULL,
-                    UNIQUE (imie, nazwisko)
-                )
-                """);
-
-            statement.execute("""
-                CREATE TABLE IF NOT EXISTS wydawcy (
-                    id INTEGER PRIMARY KEY,
-                    nazwa TEXT NOT NULL UNIQUE
-                )
-                """);
-
-            statement.execute("""
-                CREATE TABLE IF NOT EXISTS ksiazki (
-                    id INTEGER PRIMARY KEY,
-                    autor_id INTEGER NOT NULL,
-                    tytul_pl TEXT NOT NULL,
-                    tytul_en TEXT NOT NULL,
-                    rok_wydania INTEGER NOT NULL CHECK (rok_wydania >= 0),
-                    wydawca_id INTEGER NOT NULL,
-                    FOREIGN KEY (autor_id) REFERENCES autorzy(id)
-                        ON UPDATE CASCADE ON DELETE RESTRICT,
-                    FOREIGN KEY (wydawca_id) REFERENCES wydawcy(id)
-                        ON UPDATE CASCADE ON DELETE RESTRICT
-                )
-                """);
-
-            statement.execute("CREATE INDEX IF NOT EXISTS idx_ksiazki_autor ON ksiazki(autor_id)");
-            statement.execute("CREATE INDEX IF NOT EXISTS idx_ksiazki_wydawca ON ksiazki(wydawca_id)");
-        }
+        // Schemat bazy jest zarządzany przez Flyway.
+        // Skrypty: src/main/resources/db/migration/V<wersja>__<opis>.sql
+        Flyway.configure()
+                .dataSource("jdbc:sqlite:" + DB_FILE, null, null)
+                .locations("classpath:db/migration")
+                // Baza utworzona wcześniej przez CREATE TABLE IF NOT EXISTS (bez historii Flyway)
+                // zostaje oznaczona jako wersja 1, zamiast ponownie tworzyć istniejące tabele.
+                .baselineOnMigrate(true)
+                .baselineVersion("1")
+                .load()
+                .migrate();
     }
 }

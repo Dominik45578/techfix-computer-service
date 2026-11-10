@@ -23,6 +23,12 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.54.1.0</version>
         </dependency>
+        <!-- Migracje schematu bazy (SQLite jest obsługiwany przez flyway-core) -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>13.11.1</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>biblioteka</finalName>
