@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ti-backend
+    # ADMIN_LOGIN / ADMIN_PASSWORD (opcjonalnie) z pliku .env – patrz .env.example.
+    # Zmienne trafiają do kontenera tylko, jeśli są wpisane w .env
+    # (pusta wartość ADMIN_LOGIN zablokowałaby start aplikacji).
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - sqlite-data:/usr/local/tomcat/data
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ti-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:
