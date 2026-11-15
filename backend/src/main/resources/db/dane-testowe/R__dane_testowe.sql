@@ -1,6 +1,3 @@
--- Uruchom raz w konsoli SQL IntelliJ IDEA, na właściwej bazie biblioteka.db
-PRAGMA foreign_keys = ON;
-
 INSERT OR IGNORE INTO autorzy (imie, nazwisko) VALUES ('Stanisław', 'Lem');
 INSERT OR IGNORE INTO autorzy (imie, nazwisko) VALUES ('George', 'Orwell');
 INSERT OR IGNORE INTO wydawcy (nazwa) VALUES ('Wydawnictwo MON');
