@@ -1,63 +1,80 @@
 package pk.wieik.ti.db;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
+public final class Database implements AutoCloseable {
+    private static final String SCHEMA_LOCATION = "classpath:db/migration";
+    private static final String SAMPLE_DATA_LOCATION = "classpath:db/dane-testowe";
 
-/** Jedno miejsce odpowiedzialne za konfigurację SQLite i schemat bazy. */
-public final class Database {
-    private static final String DRIVER = "org.sqlite.JDBC";
-    private static final Path DB_FILE = Path.of(
-            System.getProperty("catalina.base", System.getProperty("user.home")),
-            "data", "biblioteka", "biblioteka.db"
-    ).toAbsolutePath().normalize();
+    private final Path file;
+    private final HikariDataSource dataSource;
 
-    private Database() {}
-
-    public static Path getDatabaseFile() {
-        return DB_FILE;
+    private Database(Path file, HikariDataSource dataSource) {
+        this.file = file;
+        this.dataSource = dataSource;
     }
 
-    public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.err.println("No JDBC driver");
-            e.printStackTrace();
-        }
+    public static Path defaultFile() {
+        return Path.of(
+                System.getProperty("catalina.base", System.getProperty("user.home")),
+                "data", "biblioteka", "biblioteka.db"
+        ).toAbsolutePath().normalize();
+    }
 
-        // Przy pierwszym połączeniu SQLite utworzy brakujący plik bazy.
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + DB_FILE);
-        try (Statement statement = connection.createStatement()) {
-            // PRAGMA foreign_keys obowiązuje osobno dla KAŻDEGO połączenia.
-            statement.execute("PRAGMA foreign_keys = ON");
-            statement.execute("PRAGMA busy_timeout = 5000");
-        } catch (SQLException ex) {
-            connection.close();
+    public static Database open(Path file, boolean withSampleData) throws IOException {
+        Files.createDirectories(file.getParent());
+        HikariDataSource dataSource = new HikariDataSource(poolConfig(file));
+        try {
+            migrate(dataSource, withSampleData);
+        } catch (RuntimeException ex) {
+            dataSource.close();
             throw ex;
         }
-        return connection;
+        return new Database(file, dataSource);
     }
 
-    public static void initialize() throws IOException, SQLException {
-        Files.createDirectories(DB_FILE.getParent());
+    public Path file() {
+        return file;
+    }
 
-        // Schemat bazy jest zarządzany przez Flyway.
-        // Skrypty: src/main/resources/db/migration/V<wersja>__<opis>.sql
+    public DataSource dataSource() {
+        return dataSource;
+    }
+
+    @Override
+    public void close() {
+        dataSource.close();
+    }
+
+    private static HikariConfig poolConfig(Path file) {
+        HikariConfig config = new HikariConfig();
+        config.setPoolName("biblioteka-sqlite");
+        config.setDriverClassName("org.sqlite.JDBC");
+        config.setJdbcUrl("jdbc:sqlite:" + file);
+        config.setMaximumPoolSize(4);
+        config.addDataSourceProperty("foreign_keys", "true");
+        config.addDataSourceProperty("busy_timeout", "5000");
+        return config;
+    }
+
+    private static void migrate(DataSource dataSource, boolean withSampleData) {
+        String[] locations = withSampleData
+                ? new String[] {SCHEMA_LOCATION, SAMPLE_DATA_LOCATION}
+                : new String[] {SCHEMA_LOCATION};
+
         Flyway.configure()
-                .dataSource("jdbc:sqlite:" + DB_FILE, null, null)
-                .locations("classpath:db/migration")
-                // Baza utworzona wcześniej przez CREATE TABLE IF NOT EXISTS (bez historii Flyway)
-                // zostaje oznaczona jako wersja 1, zamiast ponownie tworzyć istniejące tabele.
+                .dataSource(dataSource)
+                .locations(locations)
                 .baselineOnMigrate(true)
                 .baselineVersion("1")
+                .ignoreMigrationPatterns("*:future", "repeatable:missing")
                 .load()
                 .migrate();
     }
