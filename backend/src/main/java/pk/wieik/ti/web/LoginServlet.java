@@ -6,14 +6,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import pk.wieik.ti.repository.UserRepository;
+import pk.wieik.ti.auth.AuthService;
+import pk.wieik.ti.auth.AuthenticatedUser;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @WebServlet("/logowanie")
 public class LoginServlet extends HttpServlet {
-    private final UserRepository users = new UserRepository();
+    private AuthService auth;
+
+    @Override
+    public void init() {
+        auth = AppContext.from(getServletContext()).auth();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,14 +44,13 @@ public class LoginServlet extends HttpServlet {
             throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
         try {
-            var user = users.authenticate(request.getParameter("login"),
+            Optional<AuthenticatedUser> user = auth.authenticate(request.getParameter("login"),
                     request.getParameter("haslo"));
             if (user.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/logowanie?blad=1");
                 return;
             }
 
-            // Usunięcie poprzedniej sesji zapobiega utrwaleniu jej identyfikatora.
             HttpSession previous = request.getSession(false);
             if (previous != null) previous.invalidate();
             HttpSession session = request.getSession(true);

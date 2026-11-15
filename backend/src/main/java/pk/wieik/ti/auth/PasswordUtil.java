@@ -7,7 +7,6 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-/** PBKDF2-HMAC-SHA256, NIE pojedynczy SHA-256. */
 public final class PasswordUtil {
     private static final int ITERATIONS = 600_000;
     private static final int HASH_BITS = 256;
@@ -41,7 +40,7 @@ public final class PasswordUtil {
             byte[] actual = pbkdf2(password.toCharArray(), salt, iterations);
             return MessageDigest.isEqual(expected, actual);
         } catch (IllegalArgumentException ex) {
-            return false; // Niepoprawny format w bazie.
+            return false;
         }
     }
 

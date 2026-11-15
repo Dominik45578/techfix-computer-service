@@ -6,14 +6,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import pk.wieik.ti.model.BookDetails;
 import pk.wieik.ti.repository.BookRepository;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/ksiazki")
 public class BooksServlet extends HttpServlet {
-    private final BookRepository books = new BookRepository();
+    private BookRepository books;
+
+    @Override
+    public void init() {
+        books = AppContext.from(getServletContext()).books();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,8 +40,8 @@ public class BooksServlet extends HttpServlet {
                 .append("<th>Tytuł EN</th><th>Rok</th><th>Wydawca</th>")
                 .append("</tr></thead><tbody>");
 
-            var rows = books.findAll();
-            for (var row : rows) {
+            List<BookDetails> rows = books.findAllDetails();
+            for (BookDetails row : rows) {
                 html.append("<tr><td>").append(Html.escape(row.autor()))
                     .append("</td><td>").append(Html.escape(row.tytulPl()))
                     .append("</td><td>").append(Html.escape(row.tytulEn()))
@@ -44,7 +51,7 @@ public class BooksServlet extends HttpServlet {
             }
             html.append("</tbody></table>");
             if (rows.isEmpty()) {
-                html.append("<p>Nie ma jeszcze książek. Uruchom skrypt sql/dane-testowe.sql.</p>");
+                html.append("<p>Nie ma jeszcze książek. Uruchom aplikację ze zmienną DANE_TESTOWE=true.</p>");
             }
             html.append("<form method='post' action='")
                 .append(Html.escape(request.getContextPath()))
