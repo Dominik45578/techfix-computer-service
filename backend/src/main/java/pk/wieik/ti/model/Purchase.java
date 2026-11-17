@@ -4,12 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public record Purchase(long id,
-                       long userId,
-                       long serviceId,
-                       BigDecimal totalValue,
-                       PaymentStatus paymentStatus,
-                       LocalDateTime createdAt) {
+public record Purchase(long id,  long userId,  long serviceId,  BigDecimal totalValue,  PaymentStatus paymentStatus,  LocalDateTime createdAt) {
 
     public Purchase {
         Checks.positiveId(userId, "userId");
