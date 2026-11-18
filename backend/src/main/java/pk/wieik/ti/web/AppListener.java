@@ -58,12 +58,12 @@ public class AppListener implements ServletContextListener {
 
     private static void createFirstAdminIfConfigured(AppContext context, ServletContext servletContext)
             throws Exception {
-        String login = System.getenv("ADMIN_LOGIN");
+        String email = System.getenv("ADMIN_EMAIL");
         String password = System.getenv("ADMIN_PASSWORD");
-        if ((login == null) != (password == null)) {
-            throw new IllegalStateException("Ustaw oba parametry ADMIN_LOGIN i ADMIN_PASSWORD");
+        if ((email == null) != (password == null)) {
+            throw new IllegalStateException("Ustaw oba parametry ADMIN_EMAIL i ADMIN_PASSWORD");
         }
-        if (login != null && context.auth().createFirstAdmin(login, password)) {
+        if (email != null && context.auth().createFirstAdmin(email, password)) {
             servletContext.log("Utworzono pierwsze konto administratora");
         }
     }

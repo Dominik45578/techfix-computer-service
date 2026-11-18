@@ -52,7 +52,7 @@
     </dependencies>
 
     <build>
-        <finalName>biblioteka</finalName>
+        <finalName>serwis</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

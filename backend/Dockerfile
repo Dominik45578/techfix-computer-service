@@ -16,12 +16,12 @@ RUN groupadd --system --gid ${APP_GID} tomcat \
  && useradd --system --uid ${APP_UID} --gid tomcat --home-dir /usr/local/tomcat \
         --no-create-home --shell /usr/sbin/nologin tomcat \
  && rm -rf /usr/local/tomcat/webapps/* \
- && mkdir -p /usr/local/tomcat/data/biblioteka /usr/local/tomcat/logs \
+ && mkdir -p /usr/local/tomcat/data/serwis /usr/local/tomcat/logs \
         /usr/local/tomcat/temp /usr/local/tomcat/work \
  && chown -R tomcat:tomcat /usr/local/tomcat/data /usr/local/tomcat/logs \
         /usr/local/tomcat/temp /usr/local/tomcat/work /usr/local/tomcat/webapps
 
-COPY --from=build --chown=tomcat:tomcat /app/target/biblioteka.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=build --chown=tomcat:tomcat /app/target/serwis.war /usr/local/tomcat/webapps/ROOT.war
 
 USER tomcat
 VOLUME /usr/local/tomcat/data

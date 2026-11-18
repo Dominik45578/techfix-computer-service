@@ -24,7 +24,7 @@ public final class Database implements AutoCloseable {
     public static Path defaultFile() {
         return Path.of(
                 System.getProperty("catalina.base", System.getProperty("user.home")),
-                "data", "biblioteka", "biblioteka.db"
+                "data", "serwis", "serwis.db"
         ).toAbsolutePath().normalize();
     }
 
@@ -55,7 +55,7 @@ public final class Database implements AutoCloseable {
 
     private static HikariConfig poolConfig(Path file) {
         HikariConfig config = new HikariConfig();
-        config.setPoolName("biblioteka-sqlite");
+        config.setPoolName("serwis-sqlite");
         config.setDriverClassName("org.sqlite.JDBC");
         config.setJdbcUrl("jdbc:sqlite:" + file);
         config.setMaximumPoolSize(4);

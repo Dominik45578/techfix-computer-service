@@ -28,6 +28,20 @@ services:
       - backend-net
     restart: unless-stopped
 
+  # Podgląd bazy SQLite w przeglądarce (tylko do odczytu).
+  # Uruchomienie: docker compose --profile tools up -d sqlite-web
+  sqlite-web:
+    image: ghcr.io/coleifer/sqlite-web:latest
+    container_name: ti-sqlite-web
+    profiles: ["tools"]
+    environment:
+      SQLITE_DATABASE: serwis/serwis.db
+    volumes:
+      - sqlite-data:/data:ro
+    ports:
+      - "127.0.0.1:${SQLITE_WEB_PORT:-8091}:8080"
+    restart: unless-stopped
+
 networks:
   frontend-net:
   backend-net:
