@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Button from "./Button.jsx";
+
 
 import "../styles/components/Navbar.css";
 import logoImage from "../assets/images/logo.png";
@@ -8,12 +9,38 @@ import logoImage from "../assets/images/logo.png";
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
+
+
+    function scrollToSection(sectionId) {
+        setMenuOpen(false);
+
+        if (location.pathname !== "/") {
+            navigate(`/#${sectionId}`);
+        } else {
+            document.getElementById(sectionId)?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    }
+
     const [menuOpen, setMenuOpen] = useState(false);
 
     function handleNavigate(path) {
         navigate(path);
         setMenuOpen(false);
     }
+
+    useEffect(() => {
+        if (location.pathname !== "/" || !location.hash) return;
+
+        const sectionId = location.hash.slice(1);
+
+        document.getElementById(sectionId)?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }, [location.pathname, location.hash]);
 
     return (
         <header className="navbar">
@@ -46,26 +73,49 @@ export default function Navbar() {
                 id="navbar-menu"
                 className={`navbar-nav ${menuOpen ? "navbar-nav-open" : ""}`}
             >
+
                 <Link
-                    to="/"
+                    to="/#home"
+                    onClick={(event) => {
+                        if (location.pathname === "/") {
+                            event.preventDefault();
+                            scrollToSection("home");
+                        } else {
+                            setMenuOpen(false);
+                        }
+                    }}
                     className="nav-link"
-                    onClick={() => setMenuOpen(false)}
                 >
                     Strona główna
                 </Link>
 
+
                 <Link
-                    to="/services"
+                    to="/#services"
+                    onClick={(event) => {
+                        if (location.pathname === "/") {
+                            event.preventDefault();
+                            scrollToSection("services");
+                        } else {
+                            setMenuOpen(false);
+                        }
+                    }}
                     className="nav-link"
-                    onClick={() => setMenuOpen(false)}
                 >
                     Usługi
                 </Link>
 
                 <Link
-                    to="/contact"
+                    to="/#contact"
+                    onClick={(event) => {
+                        if (location.pathname === "/") {
+                            event.preventDefault();
+                            scrollToSection("contact");
+                        } else {
+                            setMenuOpen(false);
+                        }
+                    }}
                     className="nav-link"
-                    onClick={() => setMenuOpen(false)}
                 >
                     Kontakt
                 </Link>

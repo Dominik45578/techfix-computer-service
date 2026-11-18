@@ -11,7 +11,7 @@ const contact = {
 
 export default function Footer() {
     return (
-        <footer className="footer">
+        <footer id="contact" className="footer">
             <div className="footer-content">
                 <div className="footer-brand">
                     <Link to="/" className="footer-logo">

@@ -1,0 +1,7 @@
+
+/* Strona główna */
+
+.home-page {
+    width: 100%;
+    background-color: var(--background);
+}
