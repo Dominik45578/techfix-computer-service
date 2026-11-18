@@ -1,11 +1,14 @@
 package pk.wieik.ti.model;
 
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public record Reservation(long id, long purchaseId, Long assignedStaffId, ReservationStatus status, 
-                          LocalDateTime plannedAt, String notes, LocalDateTime createdAt, LocalDateTime updatedAt) {
-                            
+/** Tabela {@code reservations}: termin realizacji jednego zakupu. */
+public record Reservation(long id, long purchaseId, Long assignedStaffId, ReservationStatus status,
+                          LocalDateTime plannedAt, String notes,
+                          LocalDateTime createdAt, LocalDateTime updatedAt) {
+
     public Reservation {
         Checks.positiveId(purchaseId, "purchaseId");
         if (assignedStaffId != null) {
@@ -17,10 +20,16 @@ public record Reservation(long id, long purchaseId, Long assignedStaffId, Reserv
         Checks.notNull(updatedAt, "updatedAt");
     }
 
+    /** Nowa rezerwacja bez przypisanego pracownika (id = 0). */
     public static Reservation of(long purchaseId, LocalDateTime plannedAt, String notes) {
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        LocalDateTime now = now();
         return new Reservation(0, purchaseId, null, ReservationStatus.PENDING,
                 plannedAt, notes, now, now);
+    }
+
+    public Reservation withId(long newId) {
+        return new Reservation(newId, purchaseId, assignedStaffId, status,
+                plannedAt, notes, createdAt, updatedAt);
     }
 
     public Reservation withStatus(ReservationStatus newStatus) {

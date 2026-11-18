@@ -1,4 +1,4 @@
-package pk.wieik.ti.db;
+package pk.wieik.ti.repository.jdbc;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-public final class SqlTypes {
+final class SqlTypes {
     private SqlTypes() {}
 
     private static final DateTimeFormatter DATE_TIME_WRITE =

@@ -1,4 +1,4 @@
-package pk.wieik.ti.db;
+package pk.wieik.ti.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class Database implements AutoCloseable {
+final class Database implements AutoCloseable {
     private static final String SCHEMA_LOCATION = "classpath:db/migration";
     private static final String SAMPLE_DATA_LOCATION = "classpath:db/dane-testowe";
 

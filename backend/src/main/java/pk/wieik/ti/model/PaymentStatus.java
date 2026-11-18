@@ -1,8 +1,8 @@
 package pk.wieik.ti.model;
 
-public enum PaymentStatus{
+public enum PaymentStatus {
     PENDING,
     PAID,
     REFUNDED,
-    CANCELLED;
+    CANCELLED
 }

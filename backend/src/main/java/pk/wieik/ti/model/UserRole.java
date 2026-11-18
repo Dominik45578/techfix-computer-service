@@ -1,6 +1,6 @@
 package pk.wieik.ti.model;
 
-public enum UserRole{
+public enum UserRole {
     CLIENT,
-    ADMIN;
+    ADMIN
 }

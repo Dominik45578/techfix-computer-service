@@ -8,10 +8,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '..', '')
   const backend = env.BACKEND_URL || `http://localhost:${env.BACKEND_DEV_PORT || 8080}`
 
-  // Te same ścieżki proxuje nginx w kontenerze (frontend/nginx.conf).
-  const proxy = Object.fromEntries(
-    ['/logowanie', '/uslugi', '/wyloguj'].map((path) => [path, { target: backend }])
-  )
+  // Całe API backendu siedzi pod /api; to samo proxuje nginx w kontenerze (frontend/nginx.conf).
+  const proxy = { '/api': { target: backend } }
 
   return {
     plugins: [react(), babel({ presets: [reactCompilerPreset()] })],

@@ -1,4 +1,4 @@
-package pk.wieik.ti.auth;
+package pk.wieik.ti.service;
 
 import pk.wieik.ti.model.User;
 import pk.wieik.ti.model.UserRole;

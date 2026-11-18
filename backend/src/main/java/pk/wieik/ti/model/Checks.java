@@ -2,6 +2,7 @@ package pk.wieik.ti.model;
 
 import java.math.BigDecimal;
 
+/** Wspólne walidacje pól encji, wywoływane w kompaktowych konstruktorach rekordów. */
 final class Checks {
     private Checks() {}
 

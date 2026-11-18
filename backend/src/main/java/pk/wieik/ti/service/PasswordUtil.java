@@ -1,4 +1,4 @@
-package pk.wieik.ti.auth;
+package pk.wieik.ti.service;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public final class PasswordUtil {
+final class PasswordUtil {
     private static final int ITERATIONS = 600_000;
     private static final int HASH_BITS = 256;
     private static final int SALT_BYTES = 16;
@@ -15,7 +15,7 @@ public final class PasswordUtil {
 
     private PasswordUtil() {}
 
-    public static String hashPassword(String password) {
+    static String hashPassword(String password) {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Hasło nie może być puste");
         }
@@ -27,7 +27,7 @@ public final class PasswordUtil {
                 + Base64.getEncoder().encodeToString(hash);
     }
 
-    public static boolean verifyPassword(String password, String stored) {
+    static boolean verifyPassword(String password, String stored) {
         if (password == null || stored == null) return false;
         try {
             String[] parts = stored.split("\\$", -1);
