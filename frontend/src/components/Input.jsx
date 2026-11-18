@@ -1,14 +1,6 @@
 import "../styles/components/Input.css";
 
-export function Input({
-                          label,
-                          type = "text",
-                          name,
-                          value,
-                          onChange,
-                          placeholder,
-                          required = false
-                      }) {
+export function Input({label, type = "text", name, value, onChange, placeholder, required = false}) {
     return (
         <div className="input-group">
             <label htmlFor={name}>{label}</label>

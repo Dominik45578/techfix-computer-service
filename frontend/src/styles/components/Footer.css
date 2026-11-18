@@ -118,6 +118,14 @@ a.footer-contact-item:hover svg {
     color: var(--footer-accent);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+#contact {
+    scroll-margin-top: 90px;
+}
+
 /* Tablet */
 
 @media (max-width: 900px) {

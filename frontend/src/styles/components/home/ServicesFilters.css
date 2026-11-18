@@ -1,0 +1,36 @@
+
+.service-filters {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+}
+
+.service-filter {
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #475569;
+
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.service-filter:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #eff4ff;
+}
+
+.service-filter.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}

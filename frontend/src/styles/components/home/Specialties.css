@@ -1,0 +1,59 @@
+.specialties {
+    padding: 50px 8%;
+}
+
+.specialties-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.specialties-header span {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.specialties-header h2 {
+    margin: 12px 0;
+    font-size: 32px;
+    color: var(--text-primary);
+}
+
+.specialties-header p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* Układ kafelków */
+
+.specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: start;
+}
+
+/* Tablet */
+
+@media (max-width: 1024px) {
+    .specialties-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Telefon */
+
+@media (max-width: 600px) {
+    .specialties {
+        padding: 55px 20px;
+    }
+
+    .specialties-header h2 {
+        font-size: 26px;
+    }
+
+    .specialties-grid {
+        grid-template-columns: 1fr;
+    }
+}

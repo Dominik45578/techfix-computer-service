@@ -22,7 +22,7 @@
 }
 
 .btn-outline {
-    background-color: transparent;
+    background-color: fff;
     color: var(--text-primary);
     border: 1px solid var(--primary);
 }
