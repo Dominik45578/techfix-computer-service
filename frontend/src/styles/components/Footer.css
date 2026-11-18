@@ -1,0 +1,161 @@
+.footer {
+    width: 100%;
+    padding: 36px 6% 16px;
+    background-color: var(--footer-background);
+    border-top: 1px solid var(--footer-border);
+}
+
+/* Główna zawartość stopki */
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.3fr;
+    gap: 48px;
+    padding-bottom: 32px;
+}
+
+/* Logo i opis */
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--footer-accent);
+    text-decoration: none;
+}
+
+.footer-brand p {
+    max-width: 260px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--footer-text);
+}
+
+/* Kolumny z linkami i kontaktem */
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.footer-column h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--footer-heading);
+}
+
+.footer-column a,
+.footer-column p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--footer-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+    color: var(--footer-accent);
+}
+
+/* Ikony kontaktowe */
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--footer-text);
+}
+
+.footer-contact-item svg {
+    flex-shrink: 0;
+    color: var(--footer-accent);
+    stroke-width: 1.8;
+}
+
+a.footer-contact-item:hover svg {
+    color: var(--footer-heading);
+}
+
+/* Dolna część stopki */
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--footer-border);
+}
+
+.footer-bottom p,
+.footer-legal a {
+    margin: 0;
+    font-size: 12px;
+    color: var(--footer-text-muted);
+    text-decoration: none;
+}
+
+.footer-legal {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-legal a {
+    transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+    color: var(--footer-accent);
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+    .footer {
+        padding: 32px 5% 16px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+}
+
+/* Telefon */
+
+@media (max-width: 600px) {
+    .footer {
+        padding: 28px 20px 16px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding-bottom: 24px;
+    }
+
+    .footer-brand p {
+        max-width: 100%;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .footer-legal {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}

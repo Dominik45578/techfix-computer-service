@@ -1,0 +1,145 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+
+    padding: 8px 30px;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+    background-color: var(--white);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.brand-logo-img {
+    height: 70px;
+    width: auto;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Hamburger - domyślnie ukryty */
+
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.navbar-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    border-radius: 3px;
+    background-color: var(--text-primary);
+}
+
+/* Tablet */
+
+@media (max-width: 1100px) {
+    .navbar {
+        padding: 8px 20px;
+    }
+
+    .navbar-nav {
+        gap: 18px;
+    }
+
+    .brand-logo-img {
+        height: 60px;
+    }
+
+    .nav-link {
+        font-size: 14px;
+    }
+
+    .navbar-actions {
+        gap: 8px;
+    }
+}
+
+/* Telefon i mniejszy tablet */
+
+@media (max-width: 850px) {
+    .navbar {
+        flex-wrap: wrap;
+        padding: 10px 20px;
+    }
+
+    .brand-logo-img {
+        height: 55px;
+    }
+
+    .navbar-toggle {
+        display: flex;
+    }
+
+    .navbar-nav {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+
+        width: 100%;
+        padding: 20px 0 10px;
+        border-top: 1px solid var(--border);
+        margin-top: 10px;
+    }
+
+    .navbar-nav-open {
+        display: flex;
+    }
+
+    .nav-link {
+        font-size: 16px;
+        padding: 6px 0;
+    }
+
+    .navbar-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .navbar-actions button {
+        width: 100%;
+    }
+}
