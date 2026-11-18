@@ -1,13 +1,15 @@
 package pk.wieik.ti.auth;
 
 import pk.wieik.ti.model.User;
+import pk.wieik.ti.model.UserRole;
 import pk.wieik.ti.repository.UserRepository;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class AuthService {
-    private static final int MAX_LOGIN_LENGTH = 64;
+    private static final int MAX_EMAIL_LENGTH = 254;
     private static final int MIN_PASSWORD_LENGTH = 12;
 
     private final UserRepository users;
@@ -16,36 +18,41 @@ public class AuthService {
         this.users = users;
     }
 
-    public Optional<AuthenticatedUser> authenticate(String login, String password) throws SQLException {
-        if (!isValidLogin(login) || password == null) {
+    public Optional<AuthenticatedUser> authenticate(String email, String password) throws SQLException {
+        if (!isValidEmail(email) || password == null) {
             return Optional.empty();
         }
-        return users.findByLogin(login.trim())
-                .filter(user -> PasswordUtil.verifyPassword(password, user.hasloHash()))
+        return users.findByEmail(email.trim())
+                .filter(user -> PasswordUtil.verifyPassword(password, user.passwordHash()))
                 .map(AuthenticatedUser::from);
     }
 
-    public User register(String login, String password, int uprawnienia) throws SQLException {
-        if (!isValidLogin(login)) {
+    public User register(String email, String password, String firstName, String lastName,
+                         String phoneNumber, LocalDate dateOfBirth, UserRole role) throws SQLException {
+        if (!isValidEmail(email)) {
             throw new IllegalArgumentException(
-                    "Login musi mieć od 1 do " + MAX_LOGIN_LENGTH + " znaków");
+                    "E-mail musi mieć od 1 do " + MAX_EMAIL_LENGTH + " znaków");
         }
         if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
             throw new IllegalArgumentException(
                     "Hasło musi mieć co najmniej " + MIN_PASSWORD_LENGTH + " znaków");
         }
-        return users.insert(User.of(login.trim(), PasswordUtil.hashPassword(password), uprawnienia));
+        if (users.existsByEmail(email.trim())) {
+            throw new IllegalArgumentException("Konto z takim adresem e-mail już istnieje");
+        }
+        return users.insert(User.of(email.trim(), PasswordUtil.hashPassword(password),
+                firstName, lastName, phoneNumber, dateOfBirth, role));
     }
 
-    public boolean createFirstAdmin(String login, String password) throws SQLException {
+    public boolean createFirstAdmin(String email, String password) throws SQLException {
         if (users.count() > 0) {
             return false;
         }
-        register(login, password, User.ADMINISTRATOR);
+        register(email, password, "Administrator", "Systemu", null, null, UserRole.ADMIN);
         return true;
     }
 
-    private static boolean isValidLogin(String login) {
-        return login != null && !login.isBlank() && login.trim().length() <= MAX_LOGIN_LENGTH;
+    private static boolean isValidEmail(String email) {
+        return email != null && !email.isBlank() && email.trim().length() <= MAX_EMAIL_LENGTH;
     }
 }

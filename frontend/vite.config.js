@@ -1,10 +1,24 @@
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
-export default defineConfig({
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] })
-  ],
+// Konfiguracja czytana z głównego pliku .env (katalog nadrzędny), żeby docker i dev
+// korzystały z jednego źródła ustawień.
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, '..', '')
+  const backend = env.BACKEND_URL || `http://localhost:${env.BACKEND_DEV_PORT || 8080}`
+
+  // Te same ścieżki proxuje nginx w kontenerze (frontend/nginx.conf).
+  const proxy = Object.fromEntries(
+    ['/logowanie', '/uslugi', '/wyloguj'].map((path) => [path, { target: backend }])
+  )
+
+  return {
+    plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
+    server: {
+      port: Number(env.FRONTEND_DEV_PORT) || 5173,
+      strictPort: true,
+      proxy,
+    },
+  }
 })

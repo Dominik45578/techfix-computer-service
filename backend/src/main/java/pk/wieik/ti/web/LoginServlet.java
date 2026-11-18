@@ -27,12 +27,12 @@ public class LoginServlet extends HttpServlet {
             throws IOException {
         String path = Html.escape(request.getContextPath());
         String error = request.getParameter("blad") != null
-                ? "<p class='error'>Nieprawidłowy login lub hasło.</p>" : "";
+                ? "<p class='error'>Nieprawidłowy e-mail lub hasło.</p>" : "";
         Html.send(response, "Logowanie", """
-            <h1>Biblioteka – logowanie</h1>
+            <h1>Serwis – logowanie</h1>
             %s
             <form method="post" action="%s/logowanie">
-                <label>Login: <input name="login" required maxlength="64" autocomplete="username"></label><br>
+                <label>E-mail: <input type="email" name="email" required maxlength="254" autocomplete="username"></label><br>
                 <label>Hasło: <input type="password" name="haslo" required autocomplete="current-password"></label><br>
                 <button type="submit">Zaloguj</button>
             </form>
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
             throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
         try {
-            Optional<AuthenticatedUser> user = auth.authenticate(request.getParameter("login"),
+            Optional<AuthenticatedUser> user = auth.authenticate(request.getParameter("email"),
                     request.getParameter("haslo"));
             if (user.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/logowanie?blad=1");
@@ -55,10 +55,11 @@ public class LoginServlet extends HttpServlet {
             if (previous != null) previous.invalidate();
             HttpSession session = request.getSession(true);
             session.setAttribute("userId", user.get().id());
-            session.setAttribute("login", user.get().login());
-            session.setAttribute("uprawnienia", user.get().uprawnienia());
+            session.setAttribute("email", user.get().email());
+            session.setAttribute("fullName", user.get().fullName());
+            session.setAttribute("role", user.get().role());
             session.setMaxInactiveInterval(20 * 60);
-            response.sendRedirect(request.getContextPath() + "/ksiazki");
+            response.sendRedirect(request.getContextPath() + "/uslugi");
         } catch (SQLException ex) {
             throw new ServletException("Błąd bazy podczas logowania", ex);
         }

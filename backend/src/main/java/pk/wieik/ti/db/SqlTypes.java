@@ -26,8 +26,6 @@ public final class SqlTypes {
             .optionalStart().appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true).optionalEnd()
             .toFormatter();
 
-    // ---- zapis (parametry zapytań) ----
-
     public static String toDb(LocalDateTime value) {
         return value == null ? null : DATE_TIME_WRITE.format(value);
     }
@@ -47,8 +45,6 @@ public final class SqlTypes {
     public static String toDb(Enum<?> value) {
         return value == null ? null : value.name();
     }
-
-    // ---- odczyt (ResultSet) ----
 
     public static LocalDateTime getDateTime(ResultSet rs, String column) throws SQLException {
         String text = rs.getString(column);

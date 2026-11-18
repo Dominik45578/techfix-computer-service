@@ -8,6 +8,7 @@ services:
       - path: .env
         required: false
     volumes:
+      # Baza: /usr/local/tomcat/data/serwis/serwis.db (sqlite-web czyta ją jako /data/serwis/serwis.db)
       - sqlite-data:/usr/local/tomcat/data
     networks:
       - backend-net
@@ -26,6 +27,21 @@ services:
     networks:
       - frontend-net
       - backend-net
+    restart: unless-stopped
+
+  # Podgląd bazy SQLite w przeglądarce (tylko do odczytu).
+  # Uruchamia się razem ze stackiem; dostępny tylko z localhost.
+  sqlite-web:
+    image: ghcr.io/coleifer/sqlite-web:latest
+    container_name: ti-sqlite-web
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["/data/serwis/serwis.db", "--read-only"]
+    volumes:
+      - sqlite-data:/data:ro
+    ports:
+      - "127.0.0.1:${SQLITE_WEB_PORT:-8091}:8080"
     restart: unless-stopped
 
 networks:
