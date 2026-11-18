@@ -17,10 +17,24 @@
         <flyway.version>13.11.1</flyway.version>
         <hikaricp.version>7.1.0</hikaricp.version>
         <slf4j.version>2.0.17</slf4j.version>
+        <!-- Ta sama linia co w Flyway 13 (tools.jackson 3.1.x), żeby nie mieszać wersji w WAR. -->
+        <jackson.version>3.1.7</jackson.version>
 
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -48,6 +62,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <!-- JSON w API; Jackson 3 ma wbudowaną obsługę java.time i rekordów. -->
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
 

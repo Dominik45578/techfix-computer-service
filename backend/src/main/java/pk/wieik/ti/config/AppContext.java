@@ -10,12 +10,14 @@ import pk.wieik.ti.repository.TransactionRunner;
 import pk.wieik.ti.repository.UserRepository;
 import pk.wieik.ti.repository.jdbc.JdbcRepositories;
 import pk.wieik.ti.service.AuthService;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Zależności dostępne dla kontrolerów (odpowiednik kontenera beanów).
  * Składane raz w {@link AppListener}; servlety pobierają je przez {@link #from}.
  */
-public record AppContext(AuthService auth,
+public record AppContext(JsonMapper json,
+                         AuthService auth,
                          TransactionRunner transactions,
                          UserRepository users,
                          DeviceCategoryRepository deviceCategories,
@@ -27,6 +29,7 @@ public record AppContext(AuthService auth,
 
     static AppContext create(JdbcRepositories repositories) {
         return new AppContext(
+                JacksonConfig.jsonMapper(),
                 new AuthService(repositories.users()),
                 repositories.transactions(),
                 repositories.users(),
