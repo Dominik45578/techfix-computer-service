@@ -8,6 +8,7 @@ services:
       - path: .env
         required: false
     volumes:
+      # Baza: /usr/local/tomcat/data/serwis/serwis.db (sqlite-web czyta ją jako /data/serwis/serwis.db)
       - sqlite-data:/usr/local/tomcat/data
     networks:
       - backend-net
@@ -29,13 +30,14 @@ services:
     restart: unless-stopped
 
   # Podgląd bazy SQLite w przeglądarce (tylko do odczytu).
-  # Uruchomienie: docker compose --profile tools up -d sqlite-web
+  # Uruchamia się razem ze stackiem; dostępny tylko z localhost.
   sqlite-web:
     image: ghcr.io/coleifer/sqlite-web:latest
     container_name: ti-sqlite-web
-    profiles: ["tools"]
-    environment:
-      SQLITE_DATABASE: serwis/serwis.db
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["/data/serwis/serwis.db", "--read-only"]
     volumes:
       - sqlite-data:/data:ro
     ports:
