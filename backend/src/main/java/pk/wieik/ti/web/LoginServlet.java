@@ -10,7 +10,7 @@ import pk.wieik.ti.auth.AuthService;
 import pk.wieik.ti.auth.AuthenticatedUser;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import pk.wieik.ti.domain.port.DataAccessException;
 import java.util.Optional;
 
 @WebServlet("/logowanie")
@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("role", user.get().role());
             session.setMaxInactiveInterval(20 * 60);
             response.sendRedirect(request.getContextPath() + "/uslugi");
-        } catch (SQLException ex) {
+        } catch (DataAccessException ex) {
             throw new ServletException("Błąd bazy podczas logowania", ex);
         }
     }

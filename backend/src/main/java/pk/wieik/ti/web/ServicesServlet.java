@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import pk.wieik.ti.model.DeviceCategory;
-import pk.wieik.ti.model.Service;
-import pk.wieik.ti.model.ServiceKind;
+import pk.wieik.ti.domain.model.catalog.DeviceCategory;
+import pk.wieik.ti.domain.model.catalog.ServiceOffer;
+import pk.wieik.ti.domain.model.catalog.ServiceKind;
+import pk.wieik.ti.domain.port.DataAccessException;
 
 import java.io.IOException;
 import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +53,8 @@ public class ServicesServlet extends HttpServlet {
                 .append("<th>Opis</th><th>Cena</th><th>Czas (min)</th>")
                 .append("</tr></thead><tbody>");
 
-            List<Service> rows = app.services().findActive();
-            for (Service s : rows) {
+            List<ServiceOffer> rows = app.serviceOffers().findActive();
+            for (ServiceOffer s : rows) {
                 html.append("<tr><td>").append(Html.escape(categories.getOrDefault(s.deviceCategoryId(), "")))
                     .append("</td><td>").append(Html.escape(s.serviceName()))
                     .append("</td><td>").append(Html.escape(kinds.getOrDefault(s.serviceKindId(), "")))
@@ -71,7 +71,7 @@ public class ServicesServlet extends HttpServlet {
                 .append(Html.escape(request.getContextPath()))
                 .append("/wyloguj'><button>Wyloguj</button></form>");
             Html.send(response, "Katalog usług", html.toString());
-        } catch (SQLException ex) {
+        } catch (DataAccessException ex) {
             throw new ServletException("Błąd odczytu usług", ex);
         }
     }

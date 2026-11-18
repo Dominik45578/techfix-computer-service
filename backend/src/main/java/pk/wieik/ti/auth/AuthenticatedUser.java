@@ -1,7 +1,7 @@
 package pk.wieik.ti.auth;
 
-import pk.wieik.ti.model.User;
-import pk.wieik.ti.model.UserRole;
+import pk.wieik.ti.domain.model.user.User;
+import pk.wieik.ti.domain.model.user.UserRole;
 
 public record AuthenticatedUser(long id, String email, String fullName, UserRole role) {
     static AuthenticatedUser from(User user) {

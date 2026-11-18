@@ -4,8 +4,8 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import pk.wieik.ti.db.Database;
-import pk.wieik.ti.db.Jdbc;
+import pk.wieik.ti.persistence.Persistence;
+import pk.wieik.ti.persistence.database.Database;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -14,17 +14,17 @@ import java.util.Collections;
 
 @WebListener
 public class AppListener implements ServletContextListener {
-    private Database database;
+    private Persistence persistence;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
         try {
-            database = Database.open(Database.defaultFile(), isEnabled("DANE_TESTOWE"));
-            servletContext.log("SQLite: " + database.file());
-            System.out.println("SQLite: " + database.file());
+            persistence = Persistence.open(Database.defaultFile(), isEnabled("DANE_TESTOWE"));
+            servletContext.log("SQLite: " + persistence.file());
+            System.out.println("SQLite: " + persistence.file());
 
-            AppContext context = AppContext.create(new Jdbc(database.dataSource()));
+            AppContext context = AppContext.create(persistence);
             context.register(servletContext);
             createFirstAdminIfConfigured(context, servletContext);
         } catch (Exception e) {
@@ -35,9 +35,9 @@ public class AppListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        if (database != null) {
-            database.close();
-            database = null;
+        if (persistence != null) {
+            persistence.close();
+            persistence = null;
         }
         deregisterJdbcDrivers(event.getServletContext());
     }

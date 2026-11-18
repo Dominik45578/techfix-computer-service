@@ -1,10 +1,9 @@
 package pk.wieik.ti.auth;
 
-import pk.wieik.ti.model.User;
-import pk.wieik.ti.model.UserRole;
-import pk.wieik.ti.repository.UserRepository;
+import pk.wieik.ti.domain.model.user.User;
+import pk.wieik.ti.domain.model.user.UserRole;
+import pk.wieik.ti.domain.port.repository.UserRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public class AuthService {
         this.users = users;
     }
 
-    public Optional<AuthenticatedUser> authenticate(String email, String password) throws SQLException {
+    public Optional<AuthenticatedUser> authenticate(String email, String password) {
         if (!isValidEmail(email) || password == null) {
             return Optional.empty();
         }
@@ -28,7 +27,7 @@ public class AuthService {
     }
 
     public User register(String email, String password, String firstName, String lastName,
-                         String phoneNumber, LocalDate dateOfBirth, UserRole role) throws SQLException {
+                         String phoneNumber, LocalDate dateOfBirth, UserRole role) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException(
                     "E-mail musi mieć od 1 do " + MAX_EMAIL_LENGTH + " znaków");
@@ -44,7 +43,7 @@ public class AuthService {
                 firstName, lastName, phoneNumber, dateOfBirth, role));
     }
 
-    public boolean createFirstAdmin(String email, String password) throws SQLException {
+    public boolean createFirstAdmin(String email, String password) {
         if (users.count() > 0) {
             return false;
         }
