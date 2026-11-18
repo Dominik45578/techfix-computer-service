@@ -79,20 +79,22 @@ cd frontend
 npm install
 npm run dev        # http://localhost:5173
 ```
-Vite sam przekazuje `/logowanie`, `/uslugi` i `/wyloguj` do backendu na `:8080`.
+Vite sam przekazuje wszystko spod `/api` do backendu na `:8080`.
 
 ---
 
 ## 📁 Co gdzie jest
 
 ```
-backend/     Java: servlety, repozytoria (JDBC), migracje bazy (Flyway)
+backend/     Java: REST API (JSON) na servletach, JDBC, migracje bazy (Flyway)
   src/main/java/pk/wieik/ti/
-    auth/        logowanie, hasła
-    db/          połączenie z bazą
-    model/       rekordy (User, Service, Reservation...)
-    repository/  zapytania SQL
-    web/         servlety (adresy URL)
+    config/           start aplikacji, pula połączeń + Flyway, AppContext
+    controller/       servlety pod /api (tylko JSON, także błędy)
+    model/            rekordy (User, ServiceOffer, Reservation...)
+    repository/       interfejsy repozytoriów
+      jdbc/           implementacje SQL (na zewnątrz widać tylko JdbcRepositories)
+    service/          logika biznesowa (logowanie, hasła...)
+  src/main/webapp/WEB-INF/web.xml   globalna obsługa błędów → JSON
   src/main/resources/db/
     migration/      schemat bazy (V1__..., V2__...)
     dane-testowe/   przykładowe dane
