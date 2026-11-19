@@ -6,9 +6,8 @@ import pk.wieik.ti.service.AuthenticatedUser;
 
 import java.security.Principal;
 
-/** Żądanie z użytkownikiem z tokenu podpiętym pod standardowe API: {@code getUserPrincipal()}, {@code isUserInRole()}. */
-class AuthenticatedRequest extends HttpServletRequestWrapper {
-    static final String AUTH_TYPE = "Bearer";
+final class AuthenticatedRequest extends HttpServletRequestWrapper {
+    private static final String AUTH_TYPE = "Bearer";
 
     private final AuthenticatedUser user;
 

@@ -9,6 +9,9 @@ import pk.wieik.ti.repository.ServiceOfferRepository;
 import pk.wieik.ti.repository.TransactionRunner;
 import pk.wieik.ti.repository.UserRepository;
 import pk.wieik.ti.repository.jdbc.JdbcRepositories;
+import pk.wieik.ti.security.token.AccessTokenService;
+import pk.wieik.ti.security.token.JwtCodec;
+import pk.wieik.ti.security.token.RefreshTokenService;
 import pk.wieik.ti.service.AuthService;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -18,6 +21,8 @@ import tools.jackson.databind.json.JsonMapper;
  */
 public record AppContext(JsonMapper json,
                          AuthService auth,
+                         AccessTokenService accessTokens,
+                         RefreshTokenService refreshTokens,
                          TransactionRunner transactions,
                          UserRepository users,
                          DeviceCategoryRepository deviceCategories,
@@ -27,10 +32,13 @@ public record AppContext(JsonMapper json,
                          ReservationRepository reservations) {
     private static final String ATTRIBUTE = AppContext.class.getName();
 
-    static AppContext create(JdbcRepositories repositories) {
+    static AppContext create(JdbcRepositories repositories, byte[] jwtSecret) {
+        JwtCodec jwt = new JwtCodec(jwtSecret);
         return new AppContext(
                 JacksonConfig.jsonMapper(),
                 new AuthService(repositories.users()),
+                new AccessTokenService(jwt),
+                new RefreshTokenService(jwt),
                 repositories.transactions(),
                 repositories.users(),
                 repositories.deviceCategories(),

@@ -16,6 +16,7 @@
         <sqlite-jdbc.version>3.54.1.0</sqlite-jdbc.version>
         <flyway.version>13.11.1</flyway.version>
         <hikaricp.version>7.1.0</hikaricp.version>
+        <nimbus-jose-jwt.version>10.10</nimbus-jose-jwt.version>
         <slf4j.version>2.0.17</slf4j.version>
         <!-- Ta sama linia co w Flyway 13 (tools.jackson 3.1.x), żeby nie mieszać wersji w WAR. -->
         <jackson.version>3.1.7</jackson.version>
@@ -57,6 +58,11 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>${hikaricp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>${nimbus-jose-jwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

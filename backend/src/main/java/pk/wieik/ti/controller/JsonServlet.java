@@ -65,7 +65,6 @@ abstract class JsonServlet extends HttpServlet {
         }
     }
 
-    /** Użytkownik z tokenu (ustawiony przez {@code AuthenticationFilter}); bez ważnego tokenu 401. */
     protected AuthenticatedUser currentUser(HttpServletRequest request) {
         if (request.getUserPrincipal() instanceof AuthenticatedUser user) {
             return user;

@@ -3,22 +3,20 @@ package pk.wieik.ti.controller;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pk.wieik.ti.controller.dto.LoginRequest;
+import pk.wieik.ti.controller.dto.RegisterRequest;
+import pk.wieik.ti.controller.dto.TokenResponse;
+import pk.wieik.ti.controller.dto.UserResponse;
 import pk.wieik.ti.model.UserRole;
+import pk.wieik.ti.security.token.IssuedToken;
+import pk.wieik.ti.service.AuthenticatedUser;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 @WebServlet("/api/auth/*")
 public class AuthServlet extends JsonServlet {
-
-    public record LoginRequest(String email, String password) {}
-
-    public record RegisterRequest(String email, String password, String firstName, String lastName,
-                                  String phoneNumber, LocalDate dateOfBirth) {}
-
-    public record TokenResponse(String accessToken, String tokenType, long expiresIn) {}
-
-    private static final long ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
+    private static final AuthenticatedUser PLACEHOLDER_USER =
+            new AuthenticatedUser(0, "placeholder@example.com", "Placeholder User", UserRole.CLIENT);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -27,57 +25,47 @@ public class AuthServlet extends JsonServlet {
             case "/register" -> register(request, response);
             case "/refresh" -> refresh(request, response);
             case "/logout" -> logout(request, response);
-            default -> throw notFound();
+            default -> throw new ApiException(HttpServletResponse.SC_NOT_FOUND, "Nie znaleziono zasobu");
         }
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LoginRequest body = readJson(request, LoginRequest.class);
-        requireNotBlank(body.email(), "email");
-        requireNotBlank(body.password(), "password");
-
-        // TODO: AuthService.authenticate → TokenService (JWT) + refresh token w ciasteczku HttpOnly
-        sendJson(response, HttpServletResponse.SC_OK, stubToken());
+        readJson(request, LoginRequest.class);
+        sendTokens(request, response, PLACEHOLDER_USER);
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
         RegisterRequest body = readJson(request, RegisterRequest.class);
-        requireNotBlank(body.email(), "email");
-        requireNotBlank(body.password(), "password");
-        requireNotBlank(body.firstName(), "firstName");
-        requireNotBlank(body.lastName(), "lastName");
-
-        // TODO: AuthService.register(..., UserRole.CLIENT)
         sendJson(response, HttpServletResponse.SC_CREATED,
                 new UserResponse(0, body.email().trim(), body.firstName() + " " + body.lastName(), UserRole.CLIENT));
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // TODO: odczyt ciasteczka z refresh tokenem, weryfikacja w DB, rotacja
-        sendJson(response, HttpServletResponse.SC_OK, stubToken());
+        boolean valid = RefreshTokenCookie.read(request)
+                .flatMap(app().refreshTokens()::verify)
+                .isPresent();
+        if (!valid) {
+            RefreshTokenCookie.clear(request, response);
+            throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, "Sesja wygasła, zaloguj się ponownie");
+        }
+        sendTokens(request, response, PLACEHOLDER_USER);
     }
 
     private void logout(HttpServletRequest request, HttpServletResponse response) {
+        RefreshTokenCookie.clear(request, response);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
-    private static TokenResponse stubToken() {
-        return new TokenResponse("stub-access-token", "Bearer", ACCESS_TOKEN_TTL_SECONDS);
+    private void sendTokens(HttpServletRequest request, HttpServletResponse response, AuthenticatedUser user)
+            throws IOException {
+        IssuedToken accessToken = app().accessTokens().issue(user);
+        RefreshTokenCookie.write(request, response, app().refreshTokens().issue(user.id()));
+        response.setHeader("Cache-Control", "no-store");
+        sendJson(response, HttpServletResponse.SC_OK, TokenResponse.bearer(accessToken));
     }
 
-    /** {@code /api/auth/login} → {@code "/login"}; samo {@code /api/auth} → {@code ""}. */
     private static String endpoint(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         return pathInfo == null ? "" : pathInfo;
-    }
-
-    private static void requireNotBlank(String value, String field) {
-        if (value == null || value.isBlank()) {
-            throw ApiException.badRequest("Pole „" + field + "” nie może być puste");
-        }
-    }
-
-    private static ApiException notFound() {
-        return new ApiException(HttpServletResponse.SC_NOT_FOUND, "Nie znaleziono zasobu");
     }
 }
