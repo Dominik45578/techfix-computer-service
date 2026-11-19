@@ -7,17 +7,17 @@ import pk.wieik.ti.controller.dto.LoginRequest;
 import pk.wieik.ti.controller.dto.RegisterRequest;
 import pk.wieik.ti.controller.dto.TokenResponse;
 import pk.wieik.ti.controller.dto.UserResponse;
-import pk.wieik.ti.model.UserRole;
 import pk.wieik.ti.security.token.IssuedToken;
 import pk.wieik.ti.service.AuthenticatedUser;
 import pk.wieik.ti.service.EmailAlreadyRegisteredException;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/api/auth/*")
 public class AuthServlet extends JsonServlet {
-    private static final AuthenticatedUser PLACEHOLDER_USER =
-            new AuthenticatedUser(0, "placeholder@example.com", "Placeholder User", UserRole.CLIENT);
+    private static final String INVALID_CREDENTIALS = "Nieprawidłowy e-mail lub hasło";
+    private static final String SESSION_EXPIRED = "Sesja wygasła, zaloguj się ponownie";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -31,8 +31,10 @@ public class AuthServlet extends JsonServlet {
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        readJson(request, LoginRequest.class);
-        sendTokens(request, response, PLACEHOLDER_USER);
+        LoginRequest body = readJson(request, LoginRequest.class);
+        AuthenticatedUser user = app().auth().authenticate(body.email(), body.password())
+                .orElseThrow(() -> new ApiException(HttpServletResponse.SC_UNAUTHORIZED, INVALID_CREDENTIALS));
+        sendTokens(request, response, user);
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -47,14 +49,14 @@ public class AuthServlet extends JsonServlet {
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean valid = RefreshTokenCookie.read(request)
+        Optional<AuthenticatedUser> user = RefreshTokenCookie.read(request)
                 .flatMap(app().refreshTokens()::verify)
-                .isPresent();
-        if (!valid) {
+                .flatMap(app().auth()::findUser);
+        if (user.isEmpty()) {
             RefreshTokenCookie.clear(request, response);
-            throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, "Sesja wygasła, zaloguj się ponownie");
+            throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, SESSION_EXPIRED);
         }
-        sendTokens(request, response, PLACEHOLDER_USER);
+        sendTokens(request, response, user.get());
     }
 
     private void logout(HttpServletRequest request, HttpServletResponse response) {

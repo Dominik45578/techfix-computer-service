@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class AuthService {
@@ -18,6 +19,7 @@ public class AuthService {
     private static final int MAX_NAME_LENGTH = 100;
     private static final Pattern EMAIL = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
     private static final Pattern PHONE = Pattern.compile("^\\+?[0-9 ()-]{6,20}$");
+    private static final String UNKNOWN_USER_HASH = PasswordUtil.hashPassword(UUID.randomUUID().toString());
 
     private final UserRepository users;
 
@@ -26,12 +28,23 @@ public class AuthService {
     }
 
     public Optional<AuthenticatedUser> authenticate(String email, String password) {
-        if (email == null || email.isBlank() || email.trim().length() > MAX_EMAIL_LENGTH || password == null) {
+        if (email == null || email.isBlank() || email.trim().length() > MAX_EMAIL_LENGTH
+                || password == null || password.length() > MAX_PASSWORD_LENGTH) {
             return Optional.empty();
         }
-        return users.findByEmail(email.trim())
-                .filter(user -> PasswordUtil.verifyPassword(password, user.passwordHash()))
+        Optional<User> user = users.findByEmail(email.trim().toLowerCase(Locale.ROOT));
+        if (user.isEmpty()) {
+            // Ten sam koszt PBKDF2 co dla istniejącego konta: czas odpowiedzi nie zdradza, czy e-mail jest w bazie.
+            PasswordUtil.verifyPassword(password, UNKNOWN_USER_HASH);
+            return Optional.empty();
+        }
+        return user
+                .filter(found -> PasswordUtil.verifyPassword(password, found.passwordHash()))
                 .map(AuthenticatedUser::from);
+    }
+
+    public Optional<AuthenticatedUser> findUser(long userId) {
+        return users.findById(userId).map(AuthenticatedUser::from);
     }
 
     public AuthenticatedUser registerClient(RegistrationRequest request) {
