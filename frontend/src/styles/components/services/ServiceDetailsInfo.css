@@ -1,0 +1,171 @@
+.details-info {
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid var(--primary-hover);
+    border-radius: 14px;
+}
+
+.details-info h2 {
+    margin: 0 0 22px;
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Zakres usługi */
+
+.details-scope {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.details-scope li {
+    min-width: 0;
+    background: #f8faff;
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease,
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+/* Klikalny kafelek */
+
+.details-scope-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+/* Najechanie */
+
+.details-scope li:hover {
+    background: var(--primary-light);
+    transform: translateY(-3px);
+
+    box-shadow: 0 5px 15px rgba(51, 92, 211, 0.12);
+}
+
+/* Wybrany kafelek */
+
+.details-scope li:has(.details-scope-button.selected) {
+    background: var(--primary-light);
+    border-color: var(--primary);
+
+    box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 15px rgba(51, 92, 211, 0.12);
+}
+
+.details-scope-button.selected {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.details-scope-button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -3px;
+}
+
+/* Ikona */
+
+.details-scope-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    background: var(--primary-light);
+    border: 1px solid var(--primary);
+    border-radius: 9px;
+
+    color: var(--primary);
+
+    transition:
+            background-color 0.3s ease,
+            color 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+/* Ikona po wybraniu */
+
+.details-scope-button.selected .details-scope-icon {
+    background: var(--primary);
+    color: #ffffff;
+
+    box-shadow: 0 0 12px rgba(51, 92, 211, 0.2);
+}
+
+/* Separator */
+
+.details-info-divider {
+    height: 1px;
+    margin: 30px 0;
+    background: #c7d2fe;
+}
+
+/* Opis przebiegu */
+
+.details-process-description {
+    margin: -8px 0 0;
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Responsywność */
+
+@media (max-width: 600px) {
+    .details-info {
+        padding: 20px;
+    }
+
+    .details-scope {
+        grid-template-columns: 1fr;
+    }
+
+    .details-scope-button {
+        padding: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .details-scope li,
+    .details-scope-icon {
+        transition: none;
+    }
+
+    .details-scope li:hover {
+        transform: none;
+    }
+}

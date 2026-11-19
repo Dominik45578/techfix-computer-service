@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -17,64 +16,140 @@ const categories = [
     "Modernizacja"
 ];
 
+
 const services = [
     {
         id: 1,
         name: "Naprawa komputerów stacjonarnych",
         category: "Naprawa",
-        description: "Diagnostyka i naprawa komputerów PC.",
-        image: "/images/services/img1.png"
+        description: "Diagnostyka, naprawa oraz modernizacja laptopów i notebooków większości popularnych marek. Przywracamy sprawność urządzenia szybko i bezpiecznie.",
+        image: "/images/services/img1.png",
+        price: "od 100 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 2,
         name: "Naprawa laptopów i notebooków",
         category: "Naprawa",
         description: "Kompleksowy serwis laptopów.",
-        image: "/images/services/img2.png"
+        image: "/images/services/img2.png",
+        price: "od 100 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 3,
         name: "Usuwanie wirusów i malware",
         category: "Oprogramowanie",
         description: "Ochrona i oczyszczanie systemu.",
-        image: "/images/services/img3.png"
+        image: "/images/services/img3.png",
+        price: "od 80 zł",
+        duration: "1–2 dni",
+        warranty: "Brak",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 4,
         name: "Modernizacja sprzętu komputerowego",
         category: "Modernizacja",
         description: "Zwiększ wydajność swojego komputera.",
-        image: "/images/services/img4.png"
+        image: "/images/services/img4.png",
+        price: "od 120 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 5,
         name: "Naprawa komputerów stacjonarnych",
         category: "Naprawa",
         description: "Diagnostyka i naprawa komputerów PC.",
-        image: "/images/services/img1.png"
+        image: "/images/services/img1.png",
+        price: "od 100 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 6,
         name: "Naprawa laptopów i notebooków",
         category: "Naprawa",
         description: "Kompleksowy serwis laptopów.",
-        image: "/images/services/img2.png"
+        image: "/images/services/img2.png",
+        price: "od 100 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
+
     },
     {
         id: 7,
         name: "Usuwanie wirusów i malware",
         category: "Oprogramowanie",
         description: "Ochrona i oczyszczanie systemu.",
-        image: "/images/services/img3.png"
+        image: "/images/services/img3.png",
+        price: "od 80 zł",
+        duration: "1–2 dni",
+        warranty: "Brak",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     },
     {
         id: 8,
         name: "Modernizacja sprzętu komputerowego",
         category: "Modernizacja",
         description: "Zwiększ wydajność swojego komputera.",
-        image: "/images/services/img4.png"
+        image: "/images/services/img4.png",
+        price: "od 120 zł",
+        duration: "1–3 dni",
+        warranty: "1 rok",
+        scope: [
+            "Diagnoza i identyfikacja usterki",
+            "Wymiana uszkodzonych podzespołów",
+            "Czyszczenie i konserwacja sprzętu",
+            "Modernizacja i rozbudowa komputera"
+        ]
     }
 ];
+
+
 
 export default function Services() {
     const navigate = useNavigate();
@@ -86,9 +161,7 @@ export default function Services() {
         service.category === activeCategory
     );
 
-    const visibleServices = showAll
-        ? filteredServices
-        : filteredServices.slice(0, 4);
+    const visibleServices = showAll ? filteredServices : filteredServices.slice(0, 4);
 
     return (
         <section id="services" className="services-section">

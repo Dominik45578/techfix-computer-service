@@ -1,0 +1,111 @@
+.service-process {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+
+    width: 100%;
+    margin-top: 28px;
+}
+
+/* Linia łącząca etapy */
+
+.service-process::before {
+    content: "";
+    position: absolute;
+
+    top: 35px;
+    left: 12.5%;
+    right: 12.5%;
+
+    height: 2px;
+    background: #c7d2fe;
+}
+
+/* Etap */
+
+.process-item {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+
+.process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+/* Ikona */
+
+.process-step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 14px;
+
+    transition:
+            background-color 0.3s ease,
+            color 0.3s ease,
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.process-item:hover .process-step-icon {
+    background: var(--primary);
+    color: #ffffff;
+    transform: translateY(-4px);
+
+    box-shadow:
+            0 0 15px rgba(51, 92, 211, 0.35),
+            0 0 30px rgba(51, 92, 211, 0.15);
+}
+
+/* Numer etapu */
+
+.process-step-number {
+    margin-top: 4px;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Nazwa etapu */
+
+.process-step-title {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Responsywność */
+
+@media (max-width: 600px) {
+    .service-process {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 12px;
+    }
+
+    .service-process::before {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .process-step-icon {
+        transition: none;
+    }
+
+    .process-item:hover .process-step-icon {
+        transform: none;
+    }
+}

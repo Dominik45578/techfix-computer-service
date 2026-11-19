@@ -4,6 +4,7 @@ import { Login } from "../pages/Login.jsx";
 import { Register } from "../pages/Register.jsx";
 import { ForgotPassword } from "../pages/ForgotPassword.jsx";
 import { ResetPassword } from "../pages/ResetPassword.jsx";
+import { ServiceDetails } from "../pages/ServiceDetails.jsx";
 import  {Home} from "../pages/Home.jsx"
 
 export default function AppRoutes() {
@@ -14,6 +15,7 @@ export default function AppRoutes() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/services/:id" element={<ServiceDetails />} />
         </Routes>
     );
 }
