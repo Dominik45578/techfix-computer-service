@@ -1,0 +1,357 @@
+
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master, main]
+
+# Dwa merge pod rząd nie mogą policzyć tej samej wersji.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Plan (zmiany + wersja)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.decide.outputs.backend }}
+      frontend: ${{ steps.decide.outputs.frontend }}
+      release: ${{ steps.decide.outputs.release }}
+      version: ${{ steps.version.outputs.version }}
+      previous: ${{ steps.version.outputs.previous }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Wykryj zmienione katalogi
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
+      - name: Policz następną wersję
+        id: version
+        env:
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          previous=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
+          if [ -z "$previous" ]; then
+            version="1.0.0"
+          else
+            IFS=. read -r major minor patch <<< "${previous#v}"
+            if   echo "$LABELS" | grep -q '"release:major"'; then version="$((major + 1)).0.0"
+            elif echo "$LABELS" | grep -q '"release:minor"'; then version="$major.$((minor + 1)).0"
+            else version="$major.$minor.$((patch + 1))"
+            fi
+          fi
+          echo "previous=${previous#v}" >> "$GITHUB_OUTPUT"
+          echo "version=$version"       >> "$GITHUB_OUTPUT"
+          echo "Poprzednia: ${previous:-brak}, nowa: v$version"
+
+      - name: Co budujemy
+        id: decide
+        env:
+          BACKEND_CHANGED: ${{ steps.filter.outputs.backend }}
+          FRONTEND_CHANGED: ${{ steps.filter.outputs.frontend }}
+          PREVIOUS: ${{ steps.version.outputs.previous }}
+        run: |
+          backend=$BACKEND_CHANGED
+          frontend=$FRONTEND_CHANGED
+          release=false
+          if [ "$backend" = true ] || [ "$frontend" = true ]; then
+            release=true
+            # Pierwszy release: nie ma czego przetagować, budujemy oba.
+            if [ -z "$PREVIOUS" ]; then backend=true; frontend=true; fi
+          fi
+          {
+            echo "backend=$backend"
+            echo "frontend=$frontend"
+            echo "release=$release"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### Plan"
+            echo "| backend | frontend | release |"
+            echo "|---|---|---|"
+            echo "| $backend | $frontend | $release |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build-backend:
+    name: Build backend (Maven)
+    needs: plan
+    if: needs.plan.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - run: mvn -B -f backend/pom.xml package
+
+  build-frontend:
+    name: Build frontend (npm)
+    needs: plan
+    if: needs.plan.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+  images:
+    name: Obrazy + smoke test + Docker Hub
+    needs: [plan, build-backend, build-frontend]
+    # build-* bywają pominięte (skipped) - to OK, byle nic nie padło.
+    if: >-
+      !cancelled()
+      && needs.plan.outputs.release == 'true'
+      && !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    # Sekrety Docker Huba są w environment "deploy" - widzi je tylko ten job.
+    environment: deploy
+    permissions:
+      contents: write   # push taga vX.Y.Z
+    outputs:
+      backend_image: ${{ env.BACKEND_IMAGE }}
+      frontend_image: ${{ env.FRONTEND_IMAGE }}
+    env:
+      BACKEND_IMAGE: ${{ vars.DOCKERHUB_USER }}/techfix-backend
+      FRONTEND_IMAGE: ${{ vars.DOCKERHUB_USER }}/techfix-frontend
+      VERSION: ${{ needs.plan.outputs.version }}
+      PREVIOUS: ${{ needs.plan.outputs.previous }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Sprawdź konfigurację Docker Huba
+        env:
+          DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
+          HAS_TOKEN: ${{ secrets.DOCKER_TOKEN != '' }}
+        run: |
+          [ -n "$DOCKERHUB_USER" ] || { echo "::error::Brak zmiennej DOCKERHUB_USER (environment 'deploy' -> Variables)"; exit 1; }
+          [ "$HAS_TOKEN" = true ]  || { echo "::error::Brak sekretu DOCKER_TOKEN (environment 'deploy' -> Secrets)"; exit 1; }
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Logowanie już tutaj: pull poprzedniej wersji działa też dla prywatnych repo.
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # --- backend -----------------------------------------------------------
+      - name: Backend bez zmian - weź poprzednią wersję
+        id: reuse-backend
+        if: needs.plan.outputs.backend != 'true'
+        run: |
+          if docker pull "$BACKEND_IMAGE:$PREVIOUS"; then
+            docker tag "$BACKEND_IMAGE:$PREVIOUS" "$BACKEND_IMAGE:$VERSION"
+          else
+            echo "::warning::Brak $BACKEND_IMAGE:$PREVIOUS na Docker Hubie - buduję od zera"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Zbuduj obraz backendu
+        if: needs.plan.outputs.backend == 'true' || steps.reuse-backend.outputs.missing == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          load: true
+          tags: ${{ env.BACKEND_IMAGE }}:${{ env.VERSION }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,scope=backend,mode=max,ignore-error=true
+
+      # --- frontend ----------------------------------------------------------
+      - name: Frontend bez zmian - weź poprzednią wersję
+        id: reuse-frontend
+        if: needs.plan.outputs.frontend != 'true'
+        run: |
+          if docker pull "$FRONTEND_IMAGE:$PREVIOUS"; then
+            docker tag "$FRONTEND_IMAGE:$PREVIOUS" "$FRONTEND_IMAGE:$VERSION"
+          else
+            echo "::warning::Brak $FRONTEND_IMAGE:$PREVIOUS na Docker Hubie - buduję od zera"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Zbuduj obraz frontendu
+        if: needs.plan.outputs.frontend == 'true' || steps.reuse-frontend.outputs.missing == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          load: true
+          tags: ${{ env.FRONTEND_IMAGE }}:${{ env.VERSION }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend,mode=max,ignore-error=true
+
+      # --- smoke test --------------------------------------------------------
+      # Ten sam docker-compose.yml co lokalnie, ale na obrazach zbudowanych wyżej.
+      - name: Smoke test
+        env:
+          DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
+          IMAGE_TAG: ${{ env.VERSION }}
+          FRONTEND_PORT: '18090'
+        run: |
+          # --wait czeka, aż healthchecki obu kontenerów będą "healthy" (albo pada).
+          docker compose -p techfix-smoke up -d --no-build --wait --wait-timeout 180 backend frontend
+
+          # Strona + API przez nginx (sprawdza też proxy frontend -> backend).
+          # Z wnętrza kontenera, żeby nie zależeć od mapowania portów na runnerze.
+          docker compose -p techfix-smoke exec -T frontend wget -q -O /dev/null http://127.0.0.1/
+          health=$(docker compose -p techfix-smoke exec -T frontend wget -q -O - http://127.0.0.1/api/health)
+          echo "/api/health -> $health"
+          echo "$health" | grep -q '"UP"'
+
+      - name: Logi kontenerów (gdy smoke test padł)
+        if: failure()
+        run: docker compose -p techfix-smoke logs --no-color
+
+      - name: Sprzątanie
+        if: always()
+        run: docker compose -p techfix-smoke down -v --remove-orphans || true
+
+      # --- publikacja (tylko po zielonym smoke teście) -----------------------
+      - name: Push na Docker Hub
+        if: ${{ !env.ACT }}   # lokalny test przez `act` nie publikuje
+        run: |
+          for image in "$BACKEND_IMAGE" "$FRONTEND_IMAGE"; do
+            docker tag "$image:$VERSION" "$image:latest"
+            docker push "$image:$VERSION"
+            docker push "$image:latest"
+          done
+
+      - name: Tag v${{ env.VERSION }} w repo
+        if: ${{ !env.ACT }}
+        run: |
+          git tag "v$VERSION" "${{ github.event.pull_request.merge_commit_sha }}"
+          git push origin "v$VERSION"
+
+      - name: Podsumowanie
+        run: |
+          {
+            echo "### Wydano v$VERSION"
+            echo "- \`$BACKEND_IMAGE:$VERSION\`"
+            echo "- \`$FRONTEND_IMAGE:$VERSION\`"
+            echo
+            echo "Na serwerze: \`IMAGE_TAG=$VERSION\` w .env, potem \`docker compose pull && docker compose up -d\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Release na GitHubie: ta sama wersja co na Docker Hubie, sam opis zmian (bez plików).
+  # Opis = podsumowanie od AI (GitHub Models) + automatyczna lista PR-ów od GitHuba.
+  # Gdy AI zawiedzie (limit, niedostępny model), release i tak powstaje z samą listą PR-ów.
+  github-release:
+    name: Release na GitHubie
+    needs: [plan, images]
+    if: ${{ !cancelled() && needs.images.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # utworzenie release
+      models: read      # GitHub Models (opis zmian przez AI)
+    env:
+      VERSION: ${{ needs.plan.outputs.version }}
+      PREVIOUS: ${{ needs.plan.outputs.previous }}
+      SHA: ${{ github.event.pull_request.merge_commit_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHA }}
+          fetch-depth: 0
+
+      - name: Zbierz zmiany od poprzedniej wersji
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BACKEND_CHANGED: ${{ needs.plan.outputs.backend }}
+          FRONTEND_CHANGED: ${{ needs.plan.outputs.frontend }}
+        run: |
+          if [ -n "$PREVIOUS" ]; then range="v$PREVIOUS..$SHA"; else range="$SHA~30..$SHA"; fi
+          git rev-parse --verify -q "${range%%..*}" >/dev/null || range="$SHA"
+          {
+            echo "Wersja: v$VERSION (poprzednia: ${PREVIOUS:-brak})"
+            echo "Zmieniony backend: $BACKEND_CHANGED, zmieniony frontend: $FRONTEND_CHANGED"
+            echo
+            echo "## Pull request #$PR_NUMBER: $PR_TITLE"
+            echo "$PR_BODY"
+            echo
+            echo "## Commity"
+            git log --no-merges --pretty='- %s' "$range" | head -n 150
+            echo
+            echo "## Zmienione pliki"
+            git diff --stat=120 "${range%%..*}" "$SHA" 2>/dev/null | tail -n 60
+          } | head -c 12000 > changes.txt
+          cat changes.txt
+
+      - name: Opis zmian (AI)
+        id: ai
+        continue-on-error: true
+        uses: actions/ai-inference@v1
+        with:
+          prompt-file: changes.txt
+          max-tokens: 800
+          system-prompt: |
+            Jesteś autorem release notes aplikacji webowej TechFix (serwis komputerowy:
+            backend Java/Tomcat, frontend React). Na podstawie opisu PR, commitów i listy
+            plików napisz po polsku krótkie podsumowanie zmian dla użytkowników i zespołu.
+            Format: Markdown, bez nagłówka z numerem wersji, 3-8 punktów pogrupowanych
+            w sekcje (np. "Nowości", "Poprawki", "Zmiany techniczne") - tylko te, które
+            mają treść. Pisz konkretnie, nie wymyślaj zmian, których nie ma w danych.
+
+      - name: Utwórz release v${{ env.VERSION }}
+        if: ${{ !env.ACT }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AI_RESPONSE_FILE: ${{ steps.ai.outputs.response-file }}
+          BACKEND_IMAGE: ${{ needs.images.outputs.backend_image }}
+          FRONTEND_IMAGE: ${{ needs.images.outputs.frontend_image }}
+        run: |
+          {
+            if [ -n "$AI_RESPONSE_FILE" ] && [ -s "$AI_RESPONSE_FILE" ]; then
+              cat "$AI_RESPONSE_FILE"
+              echo
+              echo "<sub>Podsumowanie wygenerowane przez AI (GitHub Models).</sub>"
+              echo
+            fi
+            echo "### Obrazy Dockera"
+            echo "- \`$BACKEND_IMAGE:$VERSION\`"
+            echo "- \`$FRONTEND_IMAGE:$VERSION\`"
+            echo
+          } > notes.md
+
+          start_tag=()
+          [ -n "$PREVIOUS" ] && start_tag=(--notes-start-tag "v$PREVIOUS")
+          # --generate-notes dokleja pod notes.md listę PR-ów i link "Full Changelog".
+          gh release create "v$VERSION" \
+            --verify-tag \
+            --title "v$VERSION" \
+            --notes-file notes.md \
+            --generate-notes "${start_tag[@]}" \
+            --latest

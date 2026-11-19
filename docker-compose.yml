@@ -1,5 +1,9 @@
+# Lokalne uruchomienie: buduje obrazy ze źródeł.
+# Te same obrazy wypycha się na Docker Hub przez `make push` (patrz DOCKERHUB_USER w .env),
+# a na serwerze uruchamia je deploy/docker-compose.yml.
 services:
   backend:
+    image: ${DOCKERHUB_USER:-local}/techfix-backend:${IMAGE_TAG:-latest}
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -15,6 +19,7 @@ services:
     restart: unless-stopped
 
   frontend:
+    image: ${DOCKERHUB_USER:-local}/techfix-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile

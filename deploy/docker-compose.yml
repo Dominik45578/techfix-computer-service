@@ -1,0 +1,68 @@
+# =============================================================================
+#  TechFix: uruchomienie na serwerze z gotowych obrazów z Docker Huba
+# =============================================================================
+#  Na serwerze potrzebne są tylko dwa pliki: ten oraz .env (wzór: .env.example).
+#
+#    docker compose pull       # pobierz obrazy w wersji IMAGE_TAG
+#    docker compose up -d      # uruchom / podmień kontenery
+#    docker compose logs -f    # logi
+#
+#  Baza SQLite leży w wolumenie "sqlite-data" i przetrwa aktualizacje obrazów.
+#  `docker compose down -v` KASUJE bazę.
+# =============================================================================
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  backend:
+    image: ${DOCKERHUB_USER:?Ustaw DOCKERHUB_USER w .env}/techfix-backend:${IMAGE_TAG:-latest}
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Ustaw ADMIN_EMAIL w .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Ustaw ADMIN_PASSWORD w .env}
+      DANE_TESTOWE: ${DANE_TESTOWE:-false}
+    volumes:
+      - sqlite-data:/usr/local/tomcat/data
+    networks:
+      - backend-net
+    restart: unless-stopped
+    logging: *logging
+
+  frontend:
+    image: ${DOCKERHUB_USER:?Ustaw DOCKERHUB_USER w .env}/techfix-frontend:${IMAGE_TAG:-latest}
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    networks:
+      - frontend-net
+      - backend-net
+    restart: unless-stopped
+    logging: *logging
+
+  # Podgląd bazy (tylko odczyt). Nasłuchuje wyłącznie na localhost serwera,
+  # z zewnątrz przez tunel SSH:  ssh -L 8091:localhost:8091 user@serwer
+  sqlite-web:
+    image: ghcr.io/coleifer/sqlite-web:latest
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["/data/serwis/serwis.db", "--read-only"]
+    volumes:
+      - sqlite-data:/data:ro
+    ports:
+      - "127.0.0.1:${SQLITE_WEB_PORT:-8091}:8080"
+    restart: unless-stopped
+    logging: *logging
+
+networks:
+  frontend-net:
+  backend-net:
+    internal: true
+
+volumes:
+  sqlite-data:
