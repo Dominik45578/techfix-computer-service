@@ -1,6 +1,6 @@
 import "../styles/components/Input.css";
 
-export function Input({label, type = "text", name, value, onChange, placeholder, required = false}) {
+export default function Input({label, type = "text", name, value, onChange, placeholder,disabled = false, required = false}) {
     return (
         <div className="input-group">
             <label htmlFor={name}>{label}</label>
@@ -11,6 +11,7 @@ export function Input({label, type = "text", name, value, onChange, placeholder,
                 type={type}
                 value={value}
                 onChange={onChange}
+                disabled={disabled}
                 placeholder={placeholder}
                 required={required}
             />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Input } from "../components/Input.jsx";
+import Input from "../components/Input.jsx";
 import Button from "../components/Button.jsx";
 import AuthLayout from "../layouts/AuthLayout.jsx";
 

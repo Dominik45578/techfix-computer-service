@@ -1,0 +1,92 @@
+.account-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px 8% 30px;
+}
+
+.account-container {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.account-container > h1 {
+    margin: 0 0 28px;
+    color: #101a33;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.account-tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid #dce3ef;
+    margin-bottom: 32px;
+}
+
+.account-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #334155;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.account-tab:hover {
+    color: #315bd7;
+}
+
+.account-tab.active {
+    color: #315bd7;
+    border-bottom-color: #315bd7;
+    background: #eaf0ff;
+    border-radius: 10px 10px 0 0;
+}
+
+.account-card {
+    padding: 32px 36px;
+    background: #fff;
+    border: 1px solid #e0e6f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(16, 26, 51, 0.04);
+}
+
+.account-card h2 {
+    margin: 0 0 6px;
+    color: #101a33;
+    font-size: 24px;
+}
+
+.account-card > p,
+.profile-security p {
+    margin: 0;
+    color: #64748b;
+}
+
+@media (max-width: 640px) {
+    .account-page {
+        padding: 28px 16px;
+    }
+
+    .account-container > h1 {
+        font-size: 30px;
+    }
+
+    .account-card {
+        padding: 24px 18px;
+    }
+
+    .account-tabs {
+        gap: 4px;
+    }
+
+    .account-tab {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
