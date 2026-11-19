@@ -1,10 +1,15 @@
 
 name: Release
 
+# Uruchamiane ręcznie: Actions -> Release -> Run workflow (tylko z gałęzi master/main).
 on:
-  pull_request:
-    types: [closed]
-    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Który numer wersji podbić'
+        type: choice
+        options: [patch, minor, major]
+        default: patch
 
 # Dwa merge pod rząd nie mogą policzyć tej samej wersji.
 concurrency:
@@ -17,11 +22,10 @@ permissions:
 jobs:
   plan:
     name: Plan (zmiany + wersja)
-    if: github.event.pull_request.merged == true
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
     outputs:
       backend: ${{ steps.decide.outputs.backend }}
       frontend: ${{ steps.decide.outputs.frontend }}
@@ -31,53 +35,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
-
-      - name: Wykryj zmienione katalogi
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            backend:
-              - 'backend/**'
-            frontend:
-              - 'frontend/**'
 
       - name: Policz następną wersję
         id: version
         env:
-          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          BUMP: ${{ inputs.bump }}
         run: |
           previous=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
           if [ -z "$previous" ]; then
             version="1.0.0"
           else
             IFS=. read -r major minor patch <<< "${previous#v}"
-            if   echo "$LABELS" | grep -q '"release:major"'; then version="$((major + 1)).0.0"
-            elif echo "$LABELS" | grep -q '"release:minor"'; then version="$major.$((minor + 1)).0"
-            else version="$major.$minor.$((patch + 1))"
-            fi
+            case "$BUMP" in
+              major) version="$((major + 1)).0.0" ;;
+              minor) version="$major.$((minor + 1)).0" ;;
+              *)     version="$major.$minor.$((patch + 1))" ;;
+            esac
           fi
           echo "previous=${previous#v}" >> "$GITHUB_OUTPUT"
           echo "version=$version"       >> "$GITHUB_OUTPUT"
           echo "Poprzednia: ${previous:-brak}, nowa: v$version"
 
+      # Zmiany liczone względem ostatniego taga, a nie jednego PR-a.
       - name: Co budujemy
         id: decide
         env:
-          BACKEND_CHANGED: ${{ steps.filter.outputs.backend }}
-          FRONTEND_CHANGED: ${{ steps.filter.outputs.frontend }}
           PREVIOUS: ${{ steps.version.outputs.previous }}
         run: |
-          backend=$BACKEND_CHANGED
-          frontend=$FRONTEND_CHANGED
-          release=false
-          if [ "$backend" = true ] || [ "$frontend" = true ]; then
-            release=true
+          backend=false
+          frontend=false
+          if [ -z "$PREVIOUS" ]; then
             # Pierwszy release: nie ma czego przetagować, budujemy oba.
-            if [ -z "$PREVIOUS" ]; then backend=true; frontend=true; fi
+            backend=true
+            frontend=true
+          else
+            changed=$(git diff --name-only "v$PREVIOUS" HEAD)
+            if grep -q '^backend/' <<< "$changed"; then backend=true; fi
+            if grep -q '^frontend/' <<< "$changed"; then frontend=true; fi
           fi
+          release=false
+          if [ "$backend" = true ] || [ "$frontend" = true ]; then release=true; fi
           {
             echo "backend=$backend"
             echo "frontend=$frontend"
@@ -98,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.sha }}
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -115,7 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -150,7 +149,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.sha }}
 
       - name: Sprawdź konfigurację Docker Huba
         env:
@@ -251,7 +250,7 @@ jobs:
       - name: Tag v${{ env.VERSION }} w repo
         if: ${{ !env.ACT }}
         run: |
-          git tag "v$VERSION" "${{ github.event.pull_request.merge_commit_sha }}"
+          git tag "v$VERSION" "${{ github.sha }}"
           git push origin "v$VERSION"
 
       - name: Podsumowanie
@@ -278,7 +277,7 @@ jobs:
     env:
       VERSION: ${{ needs.plan.outputs.version }}
       PREVIOUS: ${{ needs.plan.outputs.previous }}
-      SHA: ${{ github.event.pull_request.merge_commit_sha }}
+      SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -287,9 +286,6 @@ jobs:
 
       - name: Zbierz zmiany od poprzedniej wersji
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_BODY: ${{ github.event.pull_request.body }}
           BACKEND_CHANGED: ${{ needs.plan.outputs.backend }}
           FRONTEND_CHANGED: ${{ needs.plan.outputs.frontend }}
         run: |
@@ -299,8 +295,8 @@ jobs:
             echo "Wersja: v$VERSION (poprzednia: ${PREVIOUS:-brak})"
             echo "Zmieniony backend: $BACKEND_CHANGED, zmieniony frontend: $FRONTEND_CHANGED"
             echo
-            echo "## Pull request #$PR_NUMBER: $PR_TITLE"
-            echo "$PR_BODY"
+            echo "## Pull requesty"
+            git log --merges --pretty='- %s' "$range" | head -n 50
             echo
             echo "## Commity"
             git log --no-merges --pretty='- %s' "$range" | head -n 150
@@ -319,7 +315,7 @@ jobs:
           max-tokens: 800
           system-prompt: |
             Jesteś autorem release notes aplikacji webowej TechFix (serwis komputerowy:
-            backend Java/Tomcat, frontend React). Na podstawie opisu PR, commitów i listy
+            backend Java/Tomcat, frontend React). Na podstawie listy PR-ów, commitów i listy
             plików napisz po polsku krótkie podsumowanie zmian dla użytkowników i zespołu.
             Format: Markdown, bez nagłówka z numerem wersji, 3-8 punktów pogrupowanych
             w sekcje (np. "Nowości", "Poprawki", "Zmiany techniczne") - tylko te, które

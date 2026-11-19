@@ -5,4 +5,9 @@ public record LoginRequest(String email, String password) {
         RequestValidator.notBlank(email, "email");
         RequestValidator.notBlank(password, "password");
     }
+
+    @Override
+    public String toString() {
+        return "LoginRequest[email=" + email + "]";
+    }
 }
