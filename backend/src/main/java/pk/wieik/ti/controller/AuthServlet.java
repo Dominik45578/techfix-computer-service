@@ -8,6 +8,7 @@ import pk.wieik.ti.controller.dto.RegisterRequest;
 import pk.wieik.ti.controller.dto.TokenResponse;
 import pk.wieik.ti.controller.dto.UserResponse;
 import pk.wieik.ti.security.token.IssuedToken;
+import pk.wieik.ti.security.token.RefreshTokenRotation;
 import pk.wieik.ti.service.AuthenticatedUser;
 import pk.wieik.ti.service.EmailAlreadyRegisteredException;
 
@@ -34,7 +35,7 @@ public class AuthServlet extends JsonServlet {
         LoginRequest body = readJson(request, LoginRequest.class);
         AuthenticatedUser user = app().auth().authenticate(body.email(), body.password())
                 .orElseThrow(() -> new ApiException(HttpServletResponse.SC_UNAUTHORIZED, INVALID_CREDENTIALS));
-        sendTokens(request, response, user);
+        sendTokens(request, response, user, app().refreshTokens().issue(user.id()));
     }
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -49,25 +50,27 @@ public class AuthServlet extends JsonServlet {
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Optional<AuthenticatedUser> user = RefreshTokenCookie.read(request)
-                .flatMap(app().refreshTokens()::verify)
-                .flatMap(app().auth()::findUser);
+        Optional<RefreshTokenRotation> rotation = RefreshTokenCookie.read(request)
+                .flatMap(app().refreshTokens()::rotate);
+        Optional<AuthenticatedUser> user = rotation
+                .flatMap(rotated -> app().auth().findUser(rotated.userId()));
         if (user.isEmpty()) {
             RefreshTokenCookie.clear(request, response);
             throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, SESSION_EXPIRED);
         }
-        sendTokens(request, response, user.get());
+        sendTokens(request, response, user.get(), rotation.get().refreshToken());
     }
 
     private void logout(HttpServletRequest request, HttpServletResponse response) {
+        RefreshTokenCookie.read(request).ifPresent(app().refreshTokens()::revoke);
         RefreshTokenCookie.clear(request, response);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
-    private void sendTokens(HttpServletRequest request, HttpServletResponse response, AuthenticatedUser user)
-            throws IOException {
+    private void sendTokens(HttpServletRequest request, HttpServletResponse response,
+                            AuthenticatedUser user, IssuedToken refreshToken) throws IOException {
         IssuedToken accessToken = app().accessTokens().issue(user);
-        RefreshTokenCookie.write(request, response, app().refreshTokens().issue(user.id()));
+        RefreshTokenCookie.write(request, response, refreshToken);
         response.setHeader("Cache-Control", "no-store");
         sendJson(response, HttpServletResponse.SC_OK, TokenResponse.bearer(accessToken));
     }

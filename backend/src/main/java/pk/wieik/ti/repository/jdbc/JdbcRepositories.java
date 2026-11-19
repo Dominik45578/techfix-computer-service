@@ -2,6 +2,7 @@ package pk.wieik.ti.repository.jdbc;
 
 import pk.wieik.ti.repository.DeviceCategoryRepository;
 import pk.wieik.ti.repository.PurchaseRepository;
+import pk.wieik.ti.repository.RefreshTokenRepository;
 import pk.wieik.ti.repository.ReservationRepository;
 import pk.wieik.ti.repository.ServiceKindRepository;
 import pk.wieik.ti.repository.ServiceOfferRepository;
@@ -19,6 +20,7 @@ public final class JdbcRepositories {
     private final Jdbc jdbc;
 
     private final UserRepository users;
+    private final RefreshTokenRepository refreshTokens;
     private final DeviceCategoryRepository deviceCategories;
     private final ServiceKindRepository serviceKinds;
     private final ServiceOfferRepository serviceOffers;
@@ -28,6 +30,7 @@ public final class JdbcRepositories {
     public JdbcRepositories(DataSource dataSource) {
         this.jdbc = new Jdbc(dataSource);
         this.users = new JdbcUserRepository(jdbc);
+        this.refreshTokens = new JdbcRefreshTokenRepository(jdbc);
         this.deviceCategories = new JdbcDeviceCategoryRepository(jdbc);
         this.serviceKinds = new JdbcServiceKindRepository(jdbc);
         this.serviceOffers = new JdbcServiceOfferRepository(jdbc);
@@ -41,6 +44,10 @@ public final class JdbcRepositories {
 
     public UserRepository users() {
         return users;
+    }
+
+    public RefreshTokenRepository refreshTokens() {
+        return refreshTokens;
     }
 
     public DeviceCategoryRepository deviceCategories() {
