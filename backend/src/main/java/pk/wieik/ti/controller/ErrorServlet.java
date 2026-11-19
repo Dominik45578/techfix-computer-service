@@ -25,7 +25,7 @@ public class ErrorServlet extends JsonServlet {
                 ? uri
                 : request.getRequestURI();
 
-        sendError(response, status, messageFor(status), path);
+        sendError(response, status, ErrorPage.message(request).orElseGet(() -> messageFor(status)), path);
     }
 
     private static String messageFor(int status) {

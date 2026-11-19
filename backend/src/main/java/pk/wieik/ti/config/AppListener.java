@@ -24,9 +24,12 @@ public class AppListener implements ServletContextListener {
             servletContext.log("SQLite: " + database.file());
             System.out.println("SQLite: " + database.file());
 
-            AppContext context = AppContext.create(new JdbcRepositories(database.dataSource()));
+            AppContext context = AppContext.create(new JdbcRepositories(database.dataSource()),
+                    JwtSecret.fromEnvironment(servletContext));
             context.register(servletContext);
             createFirstAdminIfConfigured(context, servletContext);
+
+            SecurityFilters.register(servletContext, context.accessTokens());
         } catch (Exception e) {
             contextDestroyed(event);
             throw new IllegalStateException("Nie można zainicjalizować bazy SQLite", e);

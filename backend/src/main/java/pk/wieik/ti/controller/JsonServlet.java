@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pk.wieik.ti.config.AppContext;
+import pk.wieik.ti.service.AuthenticatedUser;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -12,13 +13,6 @@ import java.io.IOException;
 
 /**
  * Baza wszystkich kontrolerów REST.
- * <ul>
- *   <li>{@link #sendJson} / {@link #readJson}: JSON przez wspólny {@link JsonMapper} z {@link AppContext},</li>
- *   <li>wyjątki zamieniane na {@link ApiError}:
- *       {@link ApiException} → jej status, {@link IllegalArgumentException} (walidacja w modelu
- *       i serwisach) → 400. Każdy inny wyjątek trafia do kontenera i kończy w {@link ErrorServlet} jako 500.</li>
- * </ul>
- * Podklasy implementują tylko {@code doGet}/{@code doPost}/...; zależności biorą z {@link #app()}.
  */
 abstract class JsonServlet extends HttpServlet {
     private AppContext app;
@@ -69,6 +63,13 @@ abstract class JsonServlet extends HttpServlet {
             }
             throw ApiException.badRequest("Treść żądania nie jest poprawnym JSON-em albo ma złą strukturę");
         }
+    }
+
+    protected AuthenticatedUser currentUser(HttpServletRequest request) {
+        if (request.getUserPrincipal() instanceof AuthenticatedUser user) {
+            return user;
+        }
+        throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, "Wymagane uwierzytelnienie");
     }
 
     /** Gdy część odpowiedzi już poszła do klienta, nie da się podmienić jej na błąd. */

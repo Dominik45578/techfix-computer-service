@@ -24,6 +24,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:?Ustaw ADMIN_EMAIL w .env}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Ustaw ADMIN_PASSWORD w .env}
       DANE_TESTOWE: ${DANE_TESTOWE:-false}
+      JWT_SECRET: ${JWT_SECRET:-}
     volumes:
       - sqlite-data:/usr/local/tomcat/data
     networks:
