@@ -5,7 +5,10 @@ import { Register } from "../pages/Register.jsx";
 import { ForgotPassword } from "../pages/ForgotPassword.jsx";
 import { ResetPassword } from "../pages/ResetPassword.jsx";
 import { ServiceDetails } from "../pages/ServiceDetails.jsx";
+import {AccountProfile} from "../pages/AccountProfile.jsx"
 import  {Home} from "../pages/Home.jsx"
+
+import ProtectedRoute from "./ProtectedRoutes.jsx";
 
 export default function AppRoutes() {
     return (
@@ -16,6 +19,10 @@ export default function AppRoutes() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/services/:id" element={<ServiceDetails />} />
+
+            <Route element={<ProtectedRoute />}>
+                <Route path="/account" element={<AccountProfile />} />
+            </Route>
         </Routes>
     );
 }

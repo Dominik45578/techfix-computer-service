@@ -1,0 +1,153 @@
+.report-timeline {
+    margin-top: 24px;
+}
+
+.report-timeline h3 {
+    margin: 0 0 28px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Układ osi czasu */
+
+.timeline-steps {
+    display: flex;
+    width: 100%;
+}
+
+.timeline-step {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    color: #94a3b8;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Linie */
+
+.timeline-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 100%;
+    height: 3px;
+    background-color: #e2e8f0;
+    z-index: 0;
+}
+
+/* Oczekujące → W trakcie */
+.timeline-step.timeline-status-pending.done::after {
+    background-color: #3b82f6;
+}
+
+/* W trakcie → Zakończone */
+.timeline-step.timeline-status-in_progress.done::after {
+    background-color: #22c55e;
+}
+
+/* Domyślny wygląd kropek */
+
+.timeline-step .timeline-dot {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #cbd5e1;
+    background-color: #ffffff;
+}
+
+/* Oczekujące - pomarańczowy */
+
+.timeline-step.timeline-status-pending.done .timeline-dot,
+.timeline-step.timeline-status-pending.current .timeline-dot {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.timeline-step.timeline-status-pending.done,
+.timeline-step.timeline-status-pending.current {
+    color: #f59e0b;
+}
+
+/* W trakcie - niebieski */
+
+.timeline-step.timeline-status-in_progress.done .timeline-dot,
+.timeline-step.timeline-status-in_progress.current .timeline-dot {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.timeline-step.timeline-status-in_progress.done,
+.timeline-step.timeline-status-in_progress.current {
+    color: #3b82f6;
+}
+
+/* Zakończone - zielony */
+
+.timeline-step.timeline-status-completed.done .timeline-dot,
+.timeline-step.timeline-status-completed.current .timeline-dot {
+    background-color: #22c55e;
+    border-color: #22c55e;
+}
+
+.timeline-step.timeline-status-completed.done,
+.timeline-step.timeline-status-completed.current {
+    color: #22c55e;
+}
+
+/* Wyróżnienie aktualnego etapu */
+
+.timeline-step.current {
+    font-weight: 700;
+}
+
+.timeline-step.timeline-status-pending.current .timeline-dot {
+    box-shadow: 0 0 0 5px #fef3c7;
+}
+
+.timeline-step.timeline-status-in_progress.current .timeline-dot {
+    box-shadow: 0 0 0 5px #dbeafe;
+}
+
+.timeline-step.timeline-status-completed.current .timeline-dot {
+    box-shadow: 0 0 0 5px #dcfce7;
+}
+
+/* Anulowane zgłoszenie */
+
+.report-timeline-cancelled {
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #fef2f2;
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Responsywność */
+
+@media (max-width: 480px) {
+    .timeline-step {
+        gap: 10px;
+        font-size: 11px;
+    }
+
+    .timeline-step .timeline-dot {
+        width: 16px;
+        height: 16px;
+    }
+
+    .timeline-step:not(:last-child)::after {
+        top: 7px;
+    }
+}

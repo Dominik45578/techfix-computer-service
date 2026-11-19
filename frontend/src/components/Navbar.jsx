@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation , Link} from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+import { CircleUserRound } from "lucide-react";
 import Button from "./Button.jsx";
-
 
 import "../styles/components/Navbar.css";
 import logoImage from "../assets/images/logo.png";
@@ -9,7 +10,7 @@ import logoImage from "../assets/images/logo.png";
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const { isLoggedIn } = useAuth();
 
     function scrollToSection(sectionId) {
         setMenuOpen(false);
@@ -121,17 +122,29 @@ export default function Navbar() {
                 </Link>
 
                 <div className="navbar-actions">
-                    <Button
-                        text="Zaloguj się"
-                        variant="outline"
-                        onClick={() => handleNavigate("/login")}
-                    />
+                    {isLoggedIn ? (
+                        <Link
+                            to="/account"
+                            className="navbar-account"
+                            aria-label="Moje konto"
+                        >
+                            <CircleUserRound size={28} />
+                        </Link>
+                    ) : (
+                        <>
+                            <Button
+                                text="Zaloguj się"
+                                variant="outline"
+                                onClick={() => handleNavigate("/login")}
+                            />
 
-                    <Button
-                        text="Zarejestruj się"
-                        variant="primary"
-                        onClick={() => handleNavigate("/register")}
-                    />
+                            <Button
+                                text="Zarejestruj się"
+                                variant="primary"
+                                onClick={() => handleNavigate("/register")}
+                            />
+                        </>
+                    )}
                 </div>
             </nav>
         </header>

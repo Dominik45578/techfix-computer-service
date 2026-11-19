@@ -1,6 +1,12 @@
 .btn-primary,
 .btn-outline,
-.btn-submit {
+.btn-submit,
+.btn-alert {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
     padding: 10px 16px;
     border-radius: 8px;
     font-size: 16px;
@@ -22,11 +28,20 @@
 }
 
 .btn-outline {
-    background-color: fff;
+    background-color: #fff;
     color: var(--text-primary);
     border: 1px solid var(--primary);
 }
 
 .btn-outline:hover {
     background-color: var(--primary-light);
+}
+.btn-alert {
+    background-color: transparent;
+    color: var(--alert-primary);
+    border: 1px solid var(--alert-primary);
+}
+
+.btn-alert:hover {
+    background-color: var(--alert-light);
 }

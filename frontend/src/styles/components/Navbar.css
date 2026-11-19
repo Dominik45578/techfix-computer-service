@@ -50,6 +50,28 @@
     gap: 12px;
 }
 
+/* Profil użytkownika */
+.navbar-account {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    color: var(--primary);
+    border-radius: 50%;
+
+    transition:
+            background-color 0.3s ease,
+            color 0.3s ease;
+}
+
+.navbar-account:hover {
+    background: var(--primary-light);
+    color: var(--primary-hover);
+}
+
 /* Hamburger - domyślnie ukryty */
 
 .navbar-toggle {

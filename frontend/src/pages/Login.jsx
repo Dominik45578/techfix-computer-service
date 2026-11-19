@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Input } from "../components/Input.jsx";
+import { Link, useNavigate } from "react-router-dom";
+import Input from "../components/Input.jsx";
 import Button from "../components/Button.jsx";
 import AuthLayout from "../layouts/AuthLayout.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export function Login() {
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const [error, setError] = useState("");
 
@@ -24,6 +28,24 @@ export function Login() {
     function handleSubmit(event) {
         event.preventDefault();
         setError("");
+
+        if (
+            formData.email !== "jan@example.com" ||
+            formData.password !== "123456"
+        ) {
+            setError("Nieprawidłowy adres e-mail lub hasło.");
+            return;
+        }
+
+        login({
+            id: 1,
+            firstName: "Jan",
+            lastName: "Kowalski",
+            email: formData.email,
+            role: "user"
+        });
+
+        navigate("/");
 
         console.log("Próba logowania:", formData.email);
     }

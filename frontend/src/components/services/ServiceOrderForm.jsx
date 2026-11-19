@@ -1,30 +1,33 @@
 import { useState } from "react";
-import {
-    ClipboardPlus,
-    ArrowRight,
-    ShieldCheck
-} from "lucide-react";
+import {ClipboardPlus, ArrowRight, ShieldCheck} from "lucide-react";
 
 import Button from "../Button.jsx";
 import TextArea from "../TextArea.jsx";
 import Select from "../Select.jsx";
+import Input from "../Input.jsx";
 
 import "../../styles/components/services/ServiceOrderForm.css";
 
 export default function ServiceOrderForm({service, selectedScope,setSelectedScope}) {
     const [description, setDescription] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [device, setDevice] = useState("");
 
     function handleSubmit(event) {
         event.preventDefault();
 
         const request = {
             serviceId: service.id,
-            issueType,
+            issueType: selectedScope,
+            device: device.trim(),
             description: description.trim()
         };
 
-        if (!request.issueType || request.description.length < 10) {
+        if (
+            !request.issueType ||
+            !request.device ||
+            request.description.length < 10
+        ) {
             return;
         }
 
@@ -64,6 +67,19 @@ export default function ServiceOrderForm({service, selectedScope,setSelectedScop
                     }}
                     options={service.scope}
                     placeholder="Wybierz zakres zgłoszenia"
+                    required
+                />
+
+                <Input
+                    label="Urządzenie"
+                    type="text"
+                    name="device"
+                    value={device}
+                    onChange={(event) => {
+                        setDevice(event.target.value);
+                        setSubmitted(false);
+                    }}
+                    placeholder="Np. Dell Inspiron 15"
                     required
                 />
 

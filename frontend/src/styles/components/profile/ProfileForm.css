@@ -1,0 +1,190 @@
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Dane kontaktowe */
+
+.profile-details {
+    padding: 30px 36px 36px;
+}
+
+.profile-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-section-title {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.profile-section-title h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.profile-section-title p {
+    margin: 6px 0 0;
+    color: #64748b;
+}
+
+.profile-section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Formularz danych kontaktowych */
+
+.profile-form {
+    margin-top: 30px;
+}
+
+.profile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+}
+
+.profile-fields input:disabled {
+    background-color: var(--white);
+    color: var(--text-primary);
+    opacity: 1;
+    cursor: default;
+    -webkit-text-fill-color: var(--text-primary);
+}
+
+.profile-fields input:not(:disabled):focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(49, 91, 215, 0.1);
+}
+
+/* Przyciski formularzy */
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.profile-message {
+    margin: 18px 0 0;
+    color: #15803d;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Sekcja bezpieczeństwa */
+
+.profile-security {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 36px;
+}
+
+.profile-security-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Formularz zmiany hasła */
+
+.profile-password-form {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.profile-password-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+}
+
+.profile-password-error {
+    margin: 16px 0 0;
+    color: var(--alert);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Wylogowanie */
+
+.profile-logout {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Responsywność */
+
+@media (max-width: 768px) {
+    .profile-details,
+    .profile-security {
+        padding: 24px;
+    }
+
+    .profile-fields,
+    .profile-password-fields {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-section-header,
+    .profile-security-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-section-title h2 {
+        font-size: 21px;
+    }
+
+    .profile-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-content {
+        gap: 18px;
+    }
+
+    .profile-section-title {
+        gap: 12px;
+    }
+
+    .profile-section-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+    .profile-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .profile-actions button {
+        width: 100%;
+    }
+
+    .profile-logout button {
+        width: 100%;
+    }
+}

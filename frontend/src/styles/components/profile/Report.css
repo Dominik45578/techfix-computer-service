@@ -1,0 +1,265 @@
+.reports-content {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.reports-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.reports-header h2 {
+    margin: 0 0 6px;
+    color: var(--text-primary);
+    font-size: 24px;
+}
+
+.reports-header p {
+    margin: 0;
+    color: #64748b;
+}
+
+.reports-count {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Układ zgłoszeń */
+
+.reports-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.reports-layout.has-selection {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+}
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+/* Karta zgłoszenia */
+
+.report-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 22px 24px;
+    text-align: left;
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font: inherit;
+}
+
+.report-card:hover {
+    border-color: var(--primary);
+}
+
+.report-card.selected {
+    border-color: var(--primary);
+    background: #f8faff;
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+.report-card-top,
+.report-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.report-number {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.report-card h3 {
+    margin: 16px 0 6px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.report-device {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.report-card-bottom {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.report-card-bottom span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Statusy */
+
+.report-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.status-in_progress {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-completed {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.status-cancelled {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Panel szczegółów */
+
+.report-details {
+    min-width: 0;
+    padding: 28px;
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.report-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.report-details-header h2 {
+    margin: 8px 0 0;
+    color: var(--text-primary);
+    font-size: 21px;
+}
+
+.report-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.report-close:hover {
+    background: #f1f5f9;
+}
+
+.report-details-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.report-details-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 20px;
+    font-size: 16px;
+    color: var(--text-primary);
+}
+
+.report-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.report-info-row div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.report-info-row span {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.report-info-row strong {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.report-description {
+    margin: 0;
+    line-height: 1.7;
+    font-size: 14px;
+    color: #475569;
+}
+
+/* Responsywność */
+
+@media (max-width: 900px) {
+    .reports-layout.has-selection {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .reports-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .report-card,
+    .report-details {
+        padding: 20px;
+    }
+
+    .report-card-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
