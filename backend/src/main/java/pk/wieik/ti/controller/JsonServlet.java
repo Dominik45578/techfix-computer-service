@@ -5,7 +5,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pk.wieik.ti.config.AppContext;
+import pk.wieik.ti.controller.dto.TokenResponse;
+import pk.wieik.ti.security.token.IssuedToken;
 import pk.wieik.ti.service.AuthenticatedUser;
+import pk.wieik.ti.service.EmailAlreadyRegisteredException;
+import pk.wieik.ti.service.UserNotFoundException;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -33,6 +37,10 @@ abstract class JsonServlet extends HttpServlet {
             super.service(request, response);
         } catch (ApiException ex) {
             sendErrorOrRethrow(request, response, ex.status(), ex);
+        } catch (EmailAlreadyRegisteredException ex) {
+            sendErrorOrRethrow(request, response, HttpServletResponse.SC_CONFLICT, ex);
+        } catch (UserNotFoundException ex) {
+            sendErrorOrRethrow(request, response, HttpServletResponse.SC_NOT_FOUND, ex);
         } catch (IllegalArgumentException ex) {
             sendErrorOrRethrow(request, response, HttpServletResponse.SC_BAD_REQUEST, ex);
         }
@@ -70,6 +78,20 @@ abstract class JsonServlet extends HttpServlet {
             return user;
         }
         throw new ApiException(HttpServletResponse.SC_UNAUTHORIZED, "Wymagane uwierzytelnienie");
+    }
+
+    /** Access token w treści odpowiedzi, refresh token w ciasteczku HttpOnly. */
+    protected void sendTokens(HttpServletRequest request, HttpServletResponse response,
+                              AuthenticatedUser user, IssuedToken refreshToken) throws IOException {
+        IssuedToken accessToken = app.accessTokens().issue(user);
+        RefreshTokenCookie.write(request, response, refreshToken);
+        response.setHeader("Cache-Control", "no-store");
+        sendJson(response, HttpServletResponse.SC_OK, TokenResponse.bearer(accessToken));
+    }
+
+    protected static String endpoint(HttpServletRequest request) {
+        String pathInfo = request.getPathInfo();
+        return pathInfo == null || pathInfo.equals("/") ? "" : pathInfo;
     }
 
     /** Gdy część odpowiedzi już poszła do klienta, nie da się podmienić jej na błąd. */

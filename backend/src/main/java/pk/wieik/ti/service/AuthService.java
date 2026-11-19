@@ -5,20 +5,13 @@ import pk.wieik.ti.model.UserRole;
 import pk.wieik.ti.repository.DataAccessException;
 import pk.wieik.ti.repository.UserRepository;
 
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Pattern;
+
+import static pk.wieik.ti.service.UserValidation.*;
 
 public class AuthService {
-    private static final int MAX_EMAIL_LENGTH = 254;
-    private static final int MIN_PASSWORD_LENGTH = 12;
-    private static final int MAX_PASSWORD_LENGTH = 128;
-    private static final int MAX_NAME_LENGTH = 100;
-    private static final Pattern EMAIL = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
-    private static final Pattern PHONE = Pattern.compile("^\\+?[0-9 ()-]{6,20}$");
     private static final String UNKNOWN_USER_HASH = PasswordUtil.hashPassword(UUID.randomUUID().toString());
 
     private final UserRepository users;
@@ -60,6 +53,27 @@ public class AuthService {
         return true;
     }
 
+    /**
+     * @throws UserNotFoundException    gdy konto zostało usunięte
+     * @throws IllegalArgumentException gdy obecne hasło się nie zgadza albo nowe nie spełnia reguł
+     */
+    public AuthenticatedUser changePassword(long userId, String currentPassword, String newPassword) {
+        User user = users.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (!PasswordUtil.verifyPassword(currentPassword, user.passwordHash())) {
+            throw new IllegalArgumentException("Obecne hasło jest nieprawidłowe");
+        }
+        validatePassword(newPassword);
+        if (newPassword.equals(currentPassword)) {
+            throw new IllegalArgumentException("Nowe hasło musi różnić się od obecnego");
+        }
+        if (!users.updatePassword(userId, PasswordUtil.hashPassword(newPassword))) {
+            throw new UserNotFoundException();
+        }
+        return AuthenticatedUser.from(user);
+    }
+
+    // TODO: reset hasła (requestPasswordReset / resetPassword) - wymaga wysyłki maili i tabeli tokenów resetu.
+
     private User register(RegistrationRequest request, UserRole role) {
         String email = normalizeEmail(request.email());
         validatePassword(request.password());
@@ -80,58 +94,6 @@ public class AuthService {
                 throw new EmailAlreadyRegisteredException(ex);
             }
             throw ex;
-        }
-    }
-
-    private static String normalizeEmail(String email) {
-        String value = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
-        if (value.isEmpty() || value.length() > MAX_EMAIL_LENGTH) {
-            throw new IllegalArgumentException("E-mail musi mieć od 1 do " + MAX_EMAIL_LENGTH + " znaków");
-        }
-        if (!EMAIL.matcher(value).matches()) {
-            throw new IllegalArgumentException("Niepoprawny adres e-mail");
-        }
-        return value;
-    }
-
-    private static void validatePassword(String password) {
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("Hasło musi mieć co najmniej " + MIN_PASSWORD_LENGTH + " znaków");
-        }
-        if (password.length() > MAX_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("Hasło może mieć najwyżej " + MAX_PASSWORD_LENGTH + " znaków");
-        }
-        if (password.isBlank()) {
-            throw new IllegalArgumentException("Hasło nie może składać się z samych spacji");
-        }
-    }
-
-    private static String normalizeName(String name, String label) {
-        String value = name == null ? "" : name.trim();
-        if (value.isEmpty()) {
-            throw new IllegalArgumentException(label + " nie może być puste");
-        }
-        if (value.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException(label + " może mieć najwyżej " + MAX_NAME_LENGTH + " znaków");
-        }
-        return value;
-    }
-
-    /** Telefon jest opcjonalny: puste pole zapisujemy jako NULL. */
-    private static String normalizePhone(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.isBlank()) {
-            return null;
-        }
-        String value = phoneNumber.trim();
-        if (!PHONE.matcher(value).matches()) {
-            throw new IllegalArgumentException("Niepoprawny numer telefonu");
-        }
-        return value;
-    }
-
-    private static void validateDateOfBirth(LocalDate dateOfBirth) {
-        if (dateOfBirth != null && dateOfBirth.isAfter(LocalDate.now(ZoneOffset.UTC))) {
-            throw new IllegalArgumentException("Data urodzenia nie może być z przyszłości");
         }
     }
 }

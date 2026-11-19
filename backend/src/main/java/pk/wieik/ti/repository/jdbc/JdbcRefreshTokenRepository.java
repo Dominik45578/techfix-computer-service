@@ -34,6 +34,12 @@ final class JdbcRefreshTokenRepository extends JdbcRepository<RefreshToken> impl
     }
 
     @Override
+    public int revokeAllForUser(long userId, LocalDateTime revokedAt) {
+        return jdbc.update("UPDATE refresh_tokens SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL",
+                toDb(revokedAt), userId);
+    }
+
+    @Override
     public int deleteExpired(LocalDateTime now) {
         return jdbc.update("DELETE FROM refresh_tokens WHERE expires_at <= ?", toDb(now));
     }

@@ -32,6 +32,12 @@ public record User(long id, String email, String passwordHash, String firstName,
                 phoneNumber, dateOfBirth, role, createdAt);
     }
 
+    public User withProfile(String newFirstName, String newLastName,
+                            String newPhoneNumber, LocalDate newDateOfBirth) {
+        return new User(id, email, passwordHash, newFirstName, newLastName,
+                newPhoneNumber, newDateOfBirth, role, createdAt);
+    }
+
     public String fullName() {
         return firstName + " " + lastName;
     }
