@@ -4,12 +4,17 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import pk.wieik.ti.model.UserRole;
 import pk.wieik.ti.repository.jdbc.JdbcRepositories;
+import pk.wieik.ti.security.AccessTokenVerifier;
+import pk.wieik.ti.security.AuthenticationFilter;
+import pk.wieik.ti.security.RoleFilter;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.Optional;
 
 /** Start aplikacji: baza → repozytoria → serwisy → {@link AppContext}. */
 @WebListener
@@ -27,6 +32,9 @@ public class AppListener implements ServletContextListener {
             AppContext context = AppContext.create(new JdbcRepositories(database.dataSource()));
             context.register(servletContext);
             createFirstAdminIfConfigured(context, servletContext);
+
+            // TODO krok 2: tokenService::verify (JWT); na razie każdy token jest odrzucany
+            registerSecurityFilters(servletContext, token -> Optional.empty());
         } catch (Exception e) {
             contextDestroyed(event);
             throw new IllegalStateException("Nie można zainicjalizować bazy SQLite", e);
@@ -40,6 +48,20 @@ public class AppListener implements ServletContextListener {
             database = null;
         }
         deregisterJdbcDrivers(event.getServletContext());
+    }
+
+    /**
+     * Kolejność rejestracji = kolejność w łańcuchu: najpierw ustalenie użytkownika, potem kontrola ról.
+     * Wzorzec {@code /x/*} obejmuje też samo {@code /x}. Domyślnie tylko {@code DispatcherType.REQUEST},
+     * więc przekierowanie do {@code /error} nie przechodzi przez filtry drugi raz.
+     */
+    private static void registerSecurityFilters(ServletContext servletContext, AccessTokenVerifier tokens) {
+        servletContext.addFilter("authentication", new AuthenticationFilter(tokens))
+                .addMappingForUrlPatterns(null, true, "/api/*");
+        servletContext.addFilter("requireUser", RoleFilter.authenticated())
+                .addMappingForUrlPatterns(null, true, "/api/me/*");
+        servletContext.addFilter("requireAdmin", RoleFilter.requireRole(UserRole.ADMIN))
+                .addMappingForUrlPatterns(null, true, "/api/admin/*");
     }
 
     private static void deregisterJdbcDrivers(ServletContext servletContext) {
