@@ -71,6 +71,10 @@ public final class RefreshTokenService {
                 .ifPresent(token -> tokens.revokeFamily(token.familyId(), now()));
     }
 
+    public void revokeAll(long userId) {
+        tokens.revokeAllForUser(userId, now());
+    }
+
     private IssuedToken store(long userId, String familyId) {
         String rawToken = generate();
         tokens.insert(RefreshToken.of(userId, hash(rawToken), familyId, LIFETIME));

@@ -14,5 +14,7 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken> {
 
     int revokeFamily(String familyId, LocalDateTime revokedAt);
 
+    int revokeAllForUser(long userId, LocalDateTime revokedAt);
+
     int deleteExpired(LocalDateTime now);
 }

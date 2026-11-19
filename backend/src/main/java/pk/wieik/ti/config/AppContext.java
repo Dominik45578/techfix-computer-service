@@ -13,6 +13,7 @@ import pk.wieik.ti.security.token.AccessTokenService;
 import pk.wieik.ti.security.token.JwtCodec;
 import pk.wieik.ti.security.token.RefreshTokenService;
 import pk.wieik.ti.service.AuthService;
+import pk.wieik.ti.service.ProfileService;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -21,6 +22,7 @@ import tools.jackson.databind.json.JsonMapper;
  */
 public record AppContext(JsonMapper json,
                          AuthService auth,
+                         ProfileService profiles,
                          AccessTokenService accessTokens,
                          RefreshTokenService refreshTokens,
                          TransactionRunner transactions,
@@ -37,6 +39,7 @@ public record AppContext(JsonMapper json,
         return new AppContext(
                 JacksonConfig.jsonMapper(),
                 new AuthService(repositories.users()),
+                new ProfileService(repositories.users()),
                 new AccessTokenService(jwt),
                 new RefreshTokenService(repositories.refreshTokens(), repositories.transactions()),
                 repositories.transactions(),

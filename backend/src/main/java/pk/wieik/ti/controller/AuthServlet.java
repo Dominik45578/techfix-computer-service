@@ -5,12 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pk.wieik.ti.controller.dto.LoginRequest;
 import pk.wieik.ti.controller.dto.RegisterRequest;
-import pk.wieik.ti.controller.dto.TokenResponse;
 import pk.wieik.ti.controller.dto.UserResponse;
-import pk.wieik.ti.security.token.IssuedToken;
 import pk.wieik.ti.security.token.RefreshTokenRotation;
 import pk.wieik.ti.service.AuthenticatedUser;
-import pk.wieik.ti.service.EmailAlreadyRegisteredException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -27,6 +24,7 @@ public class AuthServlet extends JsonServlet {
             case "/register" -> register(request, response);
             case "/refresh" -> refresh(request, response);
             case "/logout" -> logout(request, response);
+            case "/forgot-password", "/reset-password" -> passwordResetNotImplemented();
             default -> throw new ApiException(HttpServletResponse.SC_NOT_FOUND, "Nie znaleziono zasobu");
         }
     }
@@ -40,12 +38,7 @@ public class AuthServlet extends JsonServlet {
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
         RegisterRequest body = readJson(request, RegisterRequest.class);
-        AuthenticatedUser user;
-        try {
-            user = app().auth().registerClient(body.toRegistrationRequest());
-        } catch (EmailAlreadyRegisteredException ex) {
-            throw new ApiException(HttpServletResponse.SC_CONFLICT, ex.getMessage());
-        }
+        AuthenticatedUser user = app().auth().registerClient(body.toRegistrationRequest());
         sendJson(response, HttpServletResponse.SC_CREATED, UserResponse.from(user));
     }
 
@@ -67,16 +60,11 @@ public class AuthServlet extends JsonServlet {
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
-    private void sendTokens(HttpServletRequest request, HttpServletResponse response,
-                            AuthenticatedUser user, IssuedToken refreshToken) throws IOException {
-        IssuedToken accessToken = app().accessTokens().issue(user);
-        RefreshTokenCookie.write(request, response, refreshToken);
-        response.setHeader("Cache-Control", "no-store");
-        sendJson(response, HttpServletResponse.SC_OK, TokenResponse.bearer(accessToken));
-    }
-
-    private static String endpoint(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        return pathInfo == null ? "" : pathInfo;
+    // TODO: reset hasła.
+    //  POST /forgot-password {email}: zawsze 202 (bez zdradzania, czy konto istnieje), wysyłka maila z jednorazowym tokenem.
+    //  POST /reset-password {token, newPassword}: weryfikacja hasha tokena, zmiana hasła, refreshTokens().revokeAll(userId).
+    //  Wymaga: tabeli password_reset_tokens (migracja Flyway) i serwisu do wysyłki maili.
+    private static void passwordResetNotImplemented() {
+        throw new ApiException(HttpServletResponse.SC_NOT_IMPLEMENTED, "Reset hasła nie jest jeszcze dostępny");
     }
 }
