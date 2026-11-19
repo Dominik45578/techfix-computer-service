@@ -10,6 +10,7 @@ import pk.wieik.ti.controller.dto.UserResponse;
 import pk.wieik.ti.model.UserRole;
 import pk.wieik.ti.security.token.IssuedToken;
 import pk.wieik.ti.service.AuthenticatedUser;
+import pk.wieik.ti.service.EmailAlreadyRegisteredException;
 
 import java.io.IOException;
 
@@ -36,8 +37,13 @@ public class AuthServlet extends JsonServlet {
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
         RegisterRequest body = readJson(request, RegisterRequest.class);
-        sendJson(response, HttpServletResponse.SC_CREATED,
-                new UserResponse(0, body.email().trim(), body.firstName() + " " + body.lastName(), UserRole.CLIENT));
+        AuthenticatedUser user;
+        try {
+            user = app().auth().registerClient(body.toRegistrationRequest());
+        } catch (EmailAlreadyRegisteredException ex) {
+            throw new ApiException(HttpServletResponse.SC_CONFLICT, ex.getMessage());
+        }
+        sendJson(response, HttpServletResponse.SC_CREATED, UserResponse.from(user));
     }
 
     private void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
