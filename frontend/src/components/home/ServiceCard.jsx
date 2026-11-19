@@ -8,7 +8,9 @@ export default function ServiceCard({ service }) {
     return (
         <article
             className="service-card"
-            onClick={() => navigate(`/services/${service.id}`)}
+            onClick={() => navigate(`/services/${service.id}`, {
+                state: { service }
+            })}
         >
             <div className="service-card-image">
                 <img
