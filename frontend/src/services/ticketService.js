@@ -34,3 +34,17 @@ export async function getRepairHistory() {
         ticket.status === "completed"
     );
 }
+
+export async function getTicketById(id) {
+    const tickets = await getTickets();
+
+    const ticket = tickets.find(ticket =>
+        ticket.id === Number(id)
+    );
+
+    if (!ticket) {
+        throw new Error("Nie znaleziono zgłoszenia.");
+    }
+
+    return ticket;
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { getMyTickets } from "../../services/ticketService.js";
 import { filterTickets } from "../../utils/ticketUtils.js";
 import TicketsLayout from "../../layouts/TicketLayout.jsx";
@@ -22,6 +22,7 @@ export default function MyTickets() {
     const [filters, setFilters] = useState(initialFilters);
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getMyTickets()
@@ -58,7 +59,7 @@ export default function MyTickets() {
     );
 
     const handleDetails = (id) => {
-        console.log("Szczegóły zgłoszenia:", id);
+        navigate(`/tickets/${id}`);
     };
 
     const handleStatusChange = (id, status) => {

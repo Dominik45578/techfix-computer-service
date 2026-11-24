@@ -19,12 +19,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-weight: 700;
 }
 
 .ticket-filters-title h3 {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 18px;
 }
 
 /* Czyszczenie filtrów */
@@ -34,7 +34,7 @@
     background: transparent;
     border: none;
     color: var(--primary);
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -63,7 +63,7 @@
 
 .ticket-filter-date label,
 .ticket-filters .select-field label {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--text-secondary);
 }
@@ -78,7 +78,7 @@
     border-radius: 8px;
 
     color: var(--text-primary);
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .ticket-filter-date input:focus {
@@ -97,7 +97,7 @@
     padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .ticket-filters .select-arrow {
@@ -107,7 +107,7 @@
 
 .ticket-filters .select-option {
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 /* Responsywność */

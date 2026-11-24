@@ -7,6 +7,7 @@ import { ResetPassword } from "../pages/ResetPassword.jsx";
 import { ServiceDetails } from "../pages/ServiceDetails.jsx";
 import {AccountProfile} from "../pages/AccountProfile.jsx"
 import {ServiceTickets} from "../pages/ServiceTickets.jsx"
+import {TicketDetails} from "../pages/TicketDetails.jsx";
 import  {Home} from "../pages/Home.jsx"
 
 import ProtectedRoute from "./ProtectedRoutes.jsx";
@@ -27,6 +28,7 @@ export default function AppRoutes() {
 
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
                 <Route path="/tickets" element={<ServiceTickets />} />
+                <Route path="/tickets/:id" element={<TicketDetails />} />
             </Route>
 
 

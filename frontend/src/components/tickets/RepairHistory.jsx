@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { getRepairHistory } from "../../services/ticketService.js";
 import TicketsLayout from "../../layouts/TicketLayout.jsx";
 import TicketCard from "./TicketCard.jsx";
@@ -11,6 +11,7 @@ export default function RepairHistory() {
     const [error, setError] = useState(null);
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getRepairHistory()
@@ -47,7 +48,7 @@ export default function RepairHistory() {
     );
 
     const handleDetails = (id) => {
-        console.log("Szczegóły zgłoszenia:", id);
+        navigate(`/tickets/${id}`);
     };
 
     const handlePageChange = (page) => {

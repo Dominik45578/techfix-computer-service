@@ -1,0 +1,129 @@
+.ticket-note-count {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.ticket-note-empty {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.ticket-note-history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Pojedyncza notatka */
+
+.ticket-history-note {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Nagłówek notatki */
+
+.ticket-history-note-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.2s ease;
+}
+
+.ticket-history-note-header::-webkit-details-marker {
+    display: none;
+}
+
+.ticket-history-note-header:hover {
+    background: var(--background);
+}
+
+/* Autor notatki */
+
+.ticket-history-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ticket-history-author svg {
+    color: var(--text-secondary);
+}
+
+.ticket-history-author span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* Data i strzałka */
+
+.ticket-history-note-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ticket-history-note-meta time {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.ticket-note-arrow {
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.ticket-history-note[open] .ticket-note-arrow {
+    transform: rotate(180deg);
+}
+
+/* Rozwinięta treść notatki */
+
+.ticket-history-note-body {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.ticket-history-note-content {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Responsywność */
+
+@media (max-width: 480px) {
+    .ticket-note-count {
+        display: none;
+    }
+
+    .ticket-history-note-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .ticket-history-note-meta {
+        margin-left: auto;
+        gap: 8px;
+    }
+
+    .ticket-history-note-meta time {
+        font-size: 12px;
+    }
+}

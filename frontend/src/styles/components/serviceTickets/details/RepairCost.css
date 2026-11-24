@@ -1,0 +1,155 @@
+.repair-cost-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.repair-cost-intro p {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.repair-cost-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Pozycje rozliczenia */
+
+.repair-cost-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 65px 115px 30px;
+    align-items: end;
+    gap: 10px;
+}
+
+.repair-cost-row .input-group {
+    min-width: 0;
+    gap: 8px;
+}
+
+.repair-cost-row .input-group label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.repair-cost-row .input-group input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+/* Usuwanie pozycji */
+
+.repair-cost-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.repair-cost-remove:hover:not(:disabled) {
+    color: var(--alert-primary);
+}
+
+.repair-cost-remove:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Dodawanie pozycji */
+
+.repair-cost-add {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 6px;
+    padding: 4px 0;
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.repair-cost-add:hover {
+    text-decoration: underline;
+}
+
+/* Podsumowanie kosztów */
+
+.repair-cost-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.repair-cost-total span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.repair-cost-total strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Przyciski */
+
+.repair-cost-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.repair-cost-intro .repair-cost-actions {
+    justify-content: flex-start;
+}
+
+.repair-cost-actions button {
+    min-height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+.repair-cost-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .repair-cost-row {
+        grid-template-columns: minmax(0, 1fr) 50px 85px 24px;
+        gap: 6px;
+    }
+
+    .repair-cost-row .input-group label {
+        font-size: 12px;
+    }
+
+    .repair-cost-row .input-group input {
+        padding: 8px 6px;
+    }
+}

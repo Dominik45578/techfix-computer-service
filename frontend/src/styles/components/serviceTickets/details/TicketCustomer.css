@@ -1,0 +1,42 @@
+.ticket-customer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ticket-customer-row {
+    display: grid;
+    grid-template-columns: 20px 150px minmax(0, 1fr);
+    align-items: center;
+    gap: 15px;
+    min-height: 24px;
+}
+
+.ticket-customer-row > svg {
+    color: var(--text-secondary);
+}
+
+.ticket-customer-row > span {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.ticket-customer-row > p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+    .ticket-customer-row {
+        grid-template-columns: 20px minmax(0, 1fr);
+        gap: 6px 10px;
+    }
+
+    .ticket-customer-row > p,
+    .ticket-customer-row > div {
+        grid-column: 2;
+    }
+}

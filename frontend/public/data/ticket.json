@@ -9,7 +9,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 15,
+      "firstName": "Anna",
+      "lastName": "Kowalska",
+      "email": "anna.kowalska@example.com",
+      "phone": "000000001"
+    },
+    "updatedAt": "2026-11-24",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1002,
@@ -21,7 +32,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 16,
+      "firstName": "Piotr",
+      "lastName": "Nowak",
+      "email": "piotr.nowak@example.com",
+      "phone": "000000002"
+    },
+    "updatedAt": "2026-11-17",
+    "userNote": "Proszę o potwierdzenie kompatybilności części przed montażem.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1003,
@@ -33,7 +55,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 17,
+      "firstName": "Maria",
+      "lastName": "Wiśniewska",
+      "email": "maria.wisniewska@example.com",
+      "phone": "000000003"
+    },
+    "updatedAt": "2026-11-10",
+    "userNote": "Proszę o dokładne czyszczenie sprzętu i sprawdzenie jego temperatur.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1004,
@@ -45,7 +78,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 18,
+      "firstName": "Paweł",
+      "lastName": "Wójcik",
+      "email": "pawel.wojcik@example.com",
+      "phone": "000000004"
+    },
+    "updatedAt": "2026-11-20",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1005,
@@ -57,7 +101,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 19,
+      "firstName": "Julia",
+      "lastName": "Kowalczyk",
+      "email": "julia.kowalczyk@example.com",
+      "phone": "000000005"
+    },
+    "updatedAt": "2026-11-13",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1006,
@@ -69,7 +124,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 20,
+      "firstName": "Adam",
+      "lastName": "Kamiński",
+      "email": "adam.kaminski@example.com",
+      "phone": "000000006"
+    },
+    "updatedAt": "2026-11-23",
+    "userNote": "Proszę o potwierdzenie kompatybilności części przed montażem.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1007,
@@ -81,7 +147,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 21,
+      "firstName": "Ewa",
+      "lastName": "Lewandowska",
+      "email": "ewa.lewandowska@example.com",
+      "phone": "000000007"
+    },
+    "updatedAt": "2026-11-16",
+    "userNote": "Proszę o zachowanie istniejących danych, jeśli to możliwe.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1008,
@@ -93,7 +170,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 22,
+      "firstName": "Michał",
+      "lastName": "Zieliński",
+      "email": "michal.zielinski@example.com",
+      "phone": "000000008"
+    },
+    "updatedAt": "2026-11-09",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1009,
@@ -105,7 +193,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 23,
+      "firstName": "Karolina",
+      "lastName": "Szymańska",
+      "email": "karolina.szymanska@example.com",
+      "phone": "000000009"
+    },
+    "updatedAt": "2026-11-19",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1010,
@@ -117,7 +216,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 24,
+      "firstName": "Tomasz",
+      "lastName": "Woźniak",
+      "email": "tomasz.wozniak@example.com",
+      "phone": "000000010"
+    },
+    "updatedAt": "2026-11-12",
+    "userNote": "Najbardziej zależy mi na odzyskaniu dokumentów i zdjęć.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1011,
@@ -129,7 +239,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 15,
+      "firstName": "Anna",
+      "lastName": "Kowalska",
+      "email": "anna.kowalska@example.com",
+      "phone": "000000001"
+    },
+    "updatedAt": "2026-11-22",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1012,
@@ -141,7 +262,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 16,
+      "firstName": "Piotr",
+      "lastName": "Nowak",
+      "email": "piotr.nowak@example.com",
+      "phone": "000000002"
+    },
+    "updatedAt": "2026-11-15",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1013,
@@ -153,7 +285,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 17,
+      "firstName": "Maria",
+      "lastName": "Wiśniewska",
+      "email": "maria.wisniewska@example.com",
+      "phone": "000000003"
+    },
+    "updatedAt": "2026-11-08",
+    "userNote": "Proszę o dokładne czyszczenie sprzętu i sprawdzenie jego temperatur.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1014,
@@ -165,7 +308,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 18,
+      "firstName": "Paweł",
+      "lastName": "Wójcik",
+      "email": "pawel.wojcik@example.com",
+      "phone": "000000004"
+    },
+    "updatedAt": "2026-11-18",
+    "userNote": "Proszę o zachowanie istniejących danych, jeśli to możliwe.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1015,
@@ -177,7 +331,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 19,
+      "firstName": "Julia",
+      "lastName": "Kowalczyk",
+      "email": "julia.kowalczyk@example.com",
+      "phone": "000000005"
+    },
+    "updatedAt": "2026-11-11",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1016,
@@ -189,7 +354,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 20,
+      "firstName": "Adam",
+      "lastName": "Kamiński",
+      "email": "adam.kaminski@example.com",
+      "phone": "000000006"
+    },
+    "updatedAt": "2026-11-21",
+    "userNote": "Proszę o potwierdzenie kompatybilności części przed montażem.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1017,
@@ -201,7 +377,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 21,
+      "firstName": "Ewa",
+      "lastName": "Lewandowska",
+      "email": "ewa.lewandowska@example.com",
+      "phone": "000000007"
+    },
+    "updatedAt": "2026-11-14",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1018,
@@ -213,7 +400,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 22,
+      "firstName": "Michał",
+      "lastName": "Zieliński",
+      "email": "michal.zielinski@example.com",
+      "phone": "000000008"
+    },
+    "updatedAt": "2026-11-24",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1019,
@@ -225,7 +423,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 23,
+      "firstName": "Karolina",
+      "lastName": "Szymańska",
+      "email": "karolina.szymanska@example.com",
+      "phone": "000000009"
+    },
+    "updatedAt": "2026-11-17",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1020,
@@ -237,7 +446,18 @@
     "status": "pending",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 24,
+      "firstName": "Tomasz",
+      "lastName": "Woźniak",
+      "email": "tomasz.wozniak@example.com",
+      "phone": "000000010"
+    },
+    "updatedAt": "2026-11-10",
+    "userNote": "Proszę o dokładne czyszczenie sprzętu i sprawdzenie jego temperatur.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1021,
@@ -249,7 +469,27 @@
     "status": "in_progress",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 15,
+      "firstName": "Anna",
+      "lastName": "Kowalska",
+      "email": "anna.kowalska@example.com",
+      "phone": "000000001"
+    },
+    "updatedAt": "2026-11-20",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [
+      {
+        "id": 10211,
+        "type": "note",
+        "content": "Wstępna diagnostyka wykazała niestabilne napięcie w układzie zasilania. Trwa sprawdzanie płyty głównej.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-20T10:30:00+01:00"
+      }
+    ],
+    "totalCost": null
   },
   {
     "id": 1022,
@@ -261,7 +501,27 @@
     "status": "in_progress",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 16,
+      "firstName": "Piotr",
+      "lastName": "Nowak",
+      "email": "piotr.nowak@example.com",
+      "phone": "000000002"
+    },
+    "updatedAt": "2026-11-13",
+    "userNote": "Proszę o potwierdzenie kompatybilności części przed montażem.",
+    "technicianNotes": [
+      {
+        "id": 10221,
+        "type": "note",
+        "content": "Potwierdzono kompatybilność dysku SSD 1 TB. Rozpoczęto tworzenie kopii danych.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-13T10:30:00+01:00"
+      }
+    ],
+    "totalCost": null
   },
   {
     "id": 1023,
@@ -273,7 +533,27 @@
     "status": "in_progress",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 17,
+      "firstName": "Maria",
+      "lastName": "Wiśniewska",
+      "email": "maria.wisniewska@example.com",
+      "phone": "000000003"
+    },
+    "updatedAt": "2026-11-23",
+    "userNote": "Proszę o dokładne czyszczenie sprzętu i sprawdzenie jego temperatur.",
+    "technicianNotes": [
+      {
+        "id": 10231,
+        "type": "note",
+        "content": "Stwierdzono znaczne zabrudzenie wentylatorów. Rozpoczęto czyszczenie układu chłodzenia.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-23T10:30:00+01:00"
+      }
+    ],
+    "totalCost": null
   },
   {
     "id": 1024,
@@ -285,7 +565,27 @@
     "status": "in_progress",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 18,
+      "firstName": "Paweł",
+      "lastName": "Wójcik",
+      "email": "pawel.wojcik@example.com",
+      "phone": "000000004"
+    },
+    "updatedAt": "2026-11-16",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [
+      {
+        "id": 10241,
+        "type": "note",
+        "content": "Test akumulatora wykazał obniżoną pojemność. Oczekiwanie na potwierdzenie kosztów przez klienta.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-16T10:30:00+01:00"
+      }
+    ],
+    "totalCost": null
   },
   {
     "id": 1025,
@@ -297,7 +597,18 @@
     "status": "in_progress",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 19,
+      "firstName": "Julia",
+      "lastName": "Kowalczyk",
+      "email": "julia.kowalczyk@example.com",
+      "phone": "000000005"
+    },
+    "updatedAt": "2026-11-09",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1045,
@@ -309,7 +620,43 @@
     "status": "completed",
     "technicianId": 1,
     "technician": "Jan Kowalski",
-    "completedAt": "2026-11-11"
+    "completedAt": "2026-11-11",
+    "customer": {
+      "id": 20,
+      "firstName": "Adam",
+      "lastName": "Kamiński",
+      "email": "adam.kaminski@example.com",
+      "phone": "000000006"
+    },
+    "updatedAt": "2026-11-11",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [
+      {
+        "id": 10453,
+        "type": "settlement",
+        "content": "Końcowe rozliczenie naprawy:\n\n- Matryca: 1 szt. × 350.00 zł = 350.00 zł\n- Wymiana matrycy: 1 szt. × 100.00 zł = 100.00 zł\n\nCałkowity koszt: 450.00 zł",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-11T14:30:00+01:00"
+      },
+      {
+        "id": 10452,
+        "type": "note",
+        "content": "Wymieniono matrycę. Test obrazu, podświetlenia i działania laptopa zakończony pomyślnie.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-11T13:15:00+01:00"
+      },
+      {
+        "id": 10451,
+        "type": "note",
+        "content": "Potwierdzono uszkodzenie matrycy. Klient zaakceptował koszt wymiany w wysokości 450 zł.",
+        "technicianId": 1,
+        "technician": "Jan Kowalski",
+        "createdAt": "2026-11-08T11:20:00+01:00"
+      }
+    ],
+    "totalCost": 450
   },
   {
     "id": 1046,
@@ -321,7 +668,18 @@
     "status": "cancelled",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 21,
+      "firstName": "Ewa",
+      "lastName": "Lewandowska",
+      "email": "ewa.lewandowska@example.com",
+      "phone": "000000007"
+    },
+    "updatedAt": "2026-11-15",
+    "userNote": "Proszę o potwierdzenie kompatybilności części przed montażem.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1047,
@@ -333,7 +691,18 @@
     "status": "cancelled",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 22,
+      "firstName": "Michał",
+      "lastName": "Zieliński",
+      "email": "michal.zielinski@example.com",
+      "phone": "000000008"
+    },
+    "updatedAt": "2026-11-08",
+    "userNote": "Proszę o zachowanie istniejących danych, jeśli to możliwe.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1048,
@@ -345,7 +714,18 @@
     "status": "cancelled",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 23,
+      "firstName": "Karolina",
+      "lastName": "Szymańska",
+      "email": "karolina.szymanska@example.com",
+      "phone": "000000009"
+    },
+    "updatedAt": "2026-11-18",
+    "userNote": "Proszę o kontakt przed rozpoczęciem naprawy w celu ustalenia kosztów.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1049,
@@ -357,7 +737,18 @@
     "status": "rejected",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 24,
+      "firstName": "Tomasz",
+      "lastName": "Woźniak",
+      "email": "tomasz.wozniak@example.com",
+      "phone": "000000010"
+    },
+    "updatedAt": "2026-11-11",
+    "userNote": "Proszę o sprawdzenie przyczyny problemu i informację o kosztach naprawy.",
+    "technicianNotes": [],
+    "totalCost": null
   },
   {
     "id": 1050,
@@ -369,6 +760,17 @@
     "status": "rejected",
     "technicianId": null,
     "technician": null,
-    "completedAt": null
+    "completedAt": null,
+    "customer": {
+      "id": 15,
+      "firstName": "Anna",
+      "lastName": "Kowalska",
+      "email": "anna.kowalska@example.com",
+      "phone": "000000001"
+    },
+    "updatedAt": "2026-11-21",
+    "userNote": "Najbardziej zależy mi na odzyskaniu dokumentów i zdjęć.",
+    "technicianNotes": [],
+    "totalCost": null
   }
 ]
