@@ -1,0 +1,76 @@
+.ticket-status-form {
+    display: grid;
+    grid-template-columns: 240px minmax(200px, 350px) auto;
+    align-items: end;
+    justify-content: start;
+    gap: 24px;
+}
+
+.ticket-status-current {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ticket-status-current > span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.ticket-status-value {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+}
+
+.ticket-status-form .select-field {
+    gap: 8px;
+}
+
+.ticket-status-form .select-field label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.ticket-status-form .select-trigger {
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.ticket-status-form .select-option {
+    font-size: 14px;
+}
+
+.ticket-status-form .select-arrow {
+    width: 16px;
+    height: 16px;
+}
+
+.ticket-status-form > .btn-primary {
+    min-height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.ticket-status-form > .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .ticket-status-form {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .ticket-status-form > .btn-primary {
+        justify-self: start;
+    }
+}

@@ -173,6 +173,76 @@
     cursor: not-allowed;
 }
 
+/* Badge */
+/* Wariant badge */
+
+.select-field.select-badge {
+    display: inline-flex;
+    width: fit-content;
+    gap: 0;
+}
+
+.select-badge .select-wrapper {
+    width: fit-content;
+}
+
+/* Przycisk */
+
+.select-badge .select-trigger {
+    width: fit-content;
+    min-height: unset;
+    padding: 5px 12px;
+    gap: 6px;
+
+    border: none;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Strzałka */
+
+.select-badge .select-arrow {
+    color: currentColor;
+}
+
+/* Hover i otwarty select */
+
+.select-badge .select-trigger:hover:not(:disabled),
+.select-badge .select-wrapper.open .select-trigger {
+    box-shadow: none;
+    filter: brightness(0.96);
+}
+
+.select-badge .select-trigger:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+/* Rozwijana lista */
+
+.select-badge .select-dropdown {
+    top: calc(100% + 6px);
+    width: max-content;
+    min-width: 100%;
+    padding: 5px;
+    gap: 2px;
+    border-radius: 8px;
+}
+
+/* Opcje */
+
+.select-badge .select-option {
+    padding: 8px 10px;
+    gap: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
 /* Animacja rozwijania */
 
 @keyframes selectDropdownOpen {

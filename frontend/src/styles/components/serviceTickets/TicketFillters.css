@@ -1,0 +1,123 @@
+.ticket-filters {
+    padding: 18px 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+/* Nagłówek */
+
+.ticket-filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.ticket-filters-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.ticket-filters-title h3 {
+    font-size: 18px;
+}
+
+/* Czyszczenie filtrów */
+
+.ticket-filters-reset {
+    padding: 4px 0;
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ticket-filters-reset:hover {
+    text-decoration: underline;
+}
+
+/* Rozmieszczenie pól */
+
+.ticket-filters-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    align-items: end;
+}
+
+/* Pola daty */
+
+.ticket-filter-date {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ticket-filter-date label,
+.ticket-filters .select-field label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.ticket-filter-date input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 12px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.ticket-filter-date input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Dopasowanie istniejącego Selecta */
+
+.ticket-filters .select-field {
+    gap: 8px;
+}
+
+.ticket-filters .select-trigger {
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.ticket-filters .select-arrow {
+    width: 16px;
+    height: 16px;
+}
+
+.ticket-filters .select-option {
+    padding: 10px 12px;
+    font-size: 16px;
+}
+
+/* Responsywność */
+
+@media (max-width: 480px) {
+    .ticket-filters-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-filters {
+        padding: 14px;
+    }
+}

@@ -1,0 +1,194 @@
+.ticket-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 20px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    transition: box-shadow 0.2s ease;
+}
+
+.ticket-card:hover {
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+/* Główna zawartość karty */
+
+.ticket-card-main {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 16px;
+    min-width: 0;
+}
+
+.ticket-card-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+    min-width: 0;
+}
+
+
+/* Zdjęcie usługi */
+
+.ticket-card-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--background);
+}
+
+.ticket-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Nagłówek zgłoszenia */
+
+.ticket-card-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ticket-card-heading h3 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ticket-card-number {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 3px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+}
+
+
+/* Zakres usługi */
+
+.ticket-card-scope,
+.ticket-card-device {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.ticket-card-scope strong,
+.ticket-card-device strong {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.ticket-card-device svg {
+    flex-shrink: 0;
+}
+
+
+/* Metadane zgłoszenia */
+
+.ticket-card-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 4px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.ticket-card-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+/* Czas oczekiwania */
+
+.ticket-waiting {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ticket-waiting.normal {
+    background: #f1f5f9;
+    color: var(--text-secondary);
+}
+
+.ticket-waiting.warning {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.ticket-waiting.urgent {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* Przyciski akcji */
+
+.ticket-card-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 10px;
+}
+
+
+/* Responsywność */
+
+@media (max-width: 850px) {
+    .ticket-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .ticket-card-actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-card {
+        padding: 12px;
+    }
+
+    .ticket-card-main {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .ticket-card-image {
+        width: 64px;
+        height: 64px;
+    }
+
+    .ticket-card-meta {
+        gap: 8px;
+    }
+
+    .ticket-card-actions {
+        flex-wrap: wrap;
+    }
+}

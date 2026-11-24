@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {ClipboardPlus, ArrowRight, ShieldCheck} from "lucide-react";
 
-import Button from "../Button.jsx";
-import TextArea from "../TextArea.jsx";
-import Select from "../Select.jsx";
-import Input from "../Input.jsx";
+import Button from "../common/Button.jsx";
+import TextArea from "../common/TextArea.jsx";
+import Select from "../common/Select.jsx";
+import Input from "../common/Input.jsx";
 
 import "../../styles/components/services/ServiceOrderForm.css";
 

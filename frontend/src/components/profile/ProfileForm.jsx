@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserRound, Pencil, LockKeyhole, LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import Input from "../Input.jsx";
-import Button from "../Button.jsx";
+import Input from "../common/Input.jsx";
+import Button from "../common/Button.jsx";
 
 import "../../styles/components/profile/ProfileForm.css";
 

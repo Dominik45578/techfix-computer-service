@@ -1,11 +1,5 @@
 import { ChevronRight, CalendarDays } from "lucide-react";
-
-const statusLabels = {
-    pending: "Oczekujące",
-    in_progress: "W trakcie",
-    completed: "Zakończone",
-    cancelled: "Anulowane"
-};
+import StatusBadge from "../common/StatusBadge.jsx";
 
 export default function ReportCard({ report, selected, onClick }) {
     return (
@@ -19,9 +13,7 @@ export default function ReportCard({ report, selected, onClick }) {
                     Zgłoszenie #{report.id}
                 </span>
 
-                <span className={`report-status status-${report.status}`}>
-                    {statusLabels[report.status]}
-                </span>
+                <StatusBadge status={report.status} />
             </div>
 
             <h3>{report.title}</h3>

@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import ServiceCard from "./ServiceCard.jsx";
 import ServiceFilters from "./ServiceFilters.jsx";
-import Button from "../Button.jsx"
+import Button from "../common/Button.jsx"
 
 import "../../styles/components/home/Services.css";
 

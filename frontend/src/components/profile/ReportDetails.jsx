@@ -1,5 +1,5 @@
 import {X, CalendarDays, UserRound, Laptop, ClipboardList} from "lucide-react";
-import Button from "../Button.jsx"
+import Button from "../common/Button.jsx"
 import ReportInfo from "./ReportInfo.jsx";
 import ReportTimeline from "./ReportTimeline.jsx";
 

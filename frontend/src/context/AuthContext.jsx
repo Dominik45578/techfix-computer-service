@@ -6,6 +6,9 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     const isLoggedIn = user !== null;
+    const role = user?.role ?? null;
+    const isAdmin = role === "admin";
+    const isUser = role === "user";
 
     function login(userData) {
         setUser(userData);
@@ -20,6 +23,9 @@ export function AuthProvider({ children }) {
             value={{
                 user,
                 isLoggedIn,
+                role,
+                isAdmin,
+                isUser,
                 login,
                 logout
             }}

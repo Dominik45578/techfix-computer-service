@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation , Link} from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { CircleUserRound } from "lucide-react";
-import Button from "./Button.jsx";
+import Button from "./common/Button.jsx";
 
 import "../styles/components/Navbar.css";
 import logoImage from "../assets/images/logo.png";
@@ -10,7 +10,7 @@ import logoImage from "../assets/images/logo.png";
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn , isAdmin } = useAuth();
 
     function scrollToSection(sectionId) {
         setMenuOpen(false);
@@ -121,15 +121,40 @@ export default function Navbar() {
                     Kontakt
                 </Link>
 
+                {isAdmin && (
+                    <>
+                        <Link
+                            to="/tickets"
+                            className="nav-link"
+                            aria-label="Zgłoszenie"
+                            onClick={() => handleNavigate("/tickets")}
+                        >
+                            Zgłoszenia
+                        </Link>
+
+                        <Link
+                            to="/panel"
+                            className="nav-link"
+                            aria-label="Panel serwisanta"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            Panel Serwisanta
+                        </Link>
+                    </>
+                )}
+
                 <div className="navbar-actions">
                     {isLoggedIn ? (
-                        <Link
-                            to="/account"
-                            className="navbar-account"
-                            aria-label="Moje konto"
-                        >
-                            <CircleUserRound size={28} />
-                        </Link>
+                        <>
+                            <Link
+                                to="/account"
+                                className="navbar-account"
+                                aria-label="Moje konto"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <CircleUserRound size={28} />
+                            </Link>
+                        </>
                     ) : (
                         <>
                             <Button
