@@ -1,5 +1,4 @@
-import React from 'react';
-import '../styles/components/Button.css';
+import '../../styles/components/common/Button.css';
 
 export default function Button({ text, type = "button", variant = "primary", onClick , icon:Icon,  disabled = false , ariaLabel}) {
     return (

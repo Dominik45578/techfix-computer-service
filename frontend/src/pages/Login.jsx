@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Input from "../components/Input.jsx";
-import Button from "../components/Button.jsx";
+import Input from "../components/common/Input.jsx";
+import Button from "../components/common/Button.jsx";
 import AuthLayout from "../layouts/AuthLayout.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export function Login() {
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        password: "",
     });
 
     const { login } = useAuth();
@@ -42,7 +42,7 @@ export function Login() {
             firstName: "Jan",
             lastName: "Kowalski",
             email: formData.email,
-            role: "user"
+            role: "admin"
         });
 
         navigate("/");

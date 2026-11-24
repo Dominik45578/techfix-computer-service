@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
-import "../styles/components/ImageSelect.css";
+import "../../styles/components/common/ImageSelect.css";
 
 export default function ImageSelect({label, options = [], value, onChange, placeholder = "Wybierz opcję" }) {
     const [isOpen, setIsOpen] = useState(false);

@@ -1,0 +1,54 @@
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    background: var(--status-background);
+    color: var(--status-color);
+}
+
+/* Kolory statusów */
+
+.status-badge.status-pending {
+    --status-background: #fff7ed;
+    --status-color: #c2410c;
+}
+
+.status-badge.status-in_progress {
+    --status-background: #eff6ff;
+    --status-color: #1d4ed8;
+}
+
+.status-badge.status-completed {
+    --status-background: #f0fdf4;
+    --status-color: #15803d;
+}
+
+.status-badge.status-cancelled,
+.status-badge.status-rejected {
+    --status-background: #fef2f2;
+    --status-color: #dc2626;
+}
+
+.status-badge.status-accepted {
+    --status-background: #f0fdfa;
+    --status-color: #0f766e;
+}
+
+/* Edytowalny badge */
+
+.select-badge .select-trigger.status-badge {
+    background: var(--status-background);
+    color: var(--status-color);
+}
+
+.select-badge .select-trigger.status-badge:hover:not(:disabled),
+.select-badge .select-wrapper.open .select-trigger.status-badge,
+.select-badge .select-trigger.status-badge:focus-visible {
+    background: var(--status-background);
+    color: var(--status-color);
+}

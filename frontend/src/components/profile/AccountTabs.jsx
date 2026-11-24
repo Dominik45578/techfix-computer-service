@@ -1,6 +1,8 @@
 import { UserRound, ClipboardList } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function AccountTabs({ activeTab, setActiveTab }) {
+    const { isUser } = useAuth();
     return (
         <div className="account-tabs">
             <button
@@ -12,14 +14,16 @@ export default function AccountTabs({ activeTab, setActiveTab }) {
                 Mój profil
             </button>
 
-            <button
-                type="button"
-                className={`account-tab ${activeTab === "reports" ? "active" : ""}`}
-                onClick={() => setActiveTab("reports")}
-            >
-                <ClipboardList size={20} />
-                Moje zgłoszenia
-            </button>
+            {isUser && (
+                <button
+                    type="button"
+                    className={`account-tab ${activeTab === "reports" ? "active" : ""}`}
+                    onClick={() => setActiveTab("reports")}
+                >
+                    <ClipboardList size={20} />
+                    Moje zgłoszenia
+                </button>
+            )}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Input from "../components/Input.jsx";
-import Button from "../components/Button.jsx";
+import Input from "../components/common/Input.jsx";
+import Button from "../components/common/Button.jsx";
 import AuthLayout from "../layouts/AuthLayout.jsx";
 
 export function ForgotPassword() {

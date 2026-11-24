@@ -3,14 +3,7 @@ import banner from "../assets/images/banner.png";
 
 import "../styles/pages/Auth.css";
 
-export default function AuthLayout({
-                                       title,
-                                       description,
-                                       switchText,
-                                       switchLink,
-                                       switchLabel,
-                                       children
-                                   }) {
+export default function AuthLayout({title, description, switchText, switchLink, switchLabel, children}) {
     return (
         <main className="auth-page">
             <div className="auth-container">

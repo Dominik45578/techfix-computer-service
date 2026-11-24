@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Check } from "lucide-react";
-import "../styles/components/Select.css";
+import "../../styles/components/common/Select.css";
 
-export default function Select({label, id, value, onChange, options = [], placeholder = "Wybierz opcję", required = false, disabled = false}) {
+export default function Select({label, id, value, onChange, options = [], placeholder = "Wybierz opcję",
+                                   required = false, disabled = false, variant = "default", className = ""
+                               }) {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef(null);
 
@@ -52,15 +54,20 @@ export default function Select({label, id, value, onChange, options = [], placeh
     }
 
     return (
-        <div className="select-field" ref={selectRef}>
+        <div
+            className={`select-field select-${variant}`}
+            ref={selectRef}
+        >
             {label && <label id={`${id}-label`}>{label}</label>}
 
             <div className={`select-wrapper ${isOpen ? "open" : ""}`}>
                 <button
                     id={id}
                     type="button"
-                    className={`select-trigger ${!selectedOption ? "placeholder" : ""}`}
-                    onClick={() => setIsOpen((prev) => !prev)}
+                    className={`select-trigger ${
+                        !selectedOption ? "placeholder" : ""
+                    } ${className}`}
+                    onClick={() => setIsOpen(prev => !prev)}
                     onKeyDown={handleKeyDown}
                     disabled={disabled}
                     aria-haspopup="listbox"
@@ -71,7 +78,10 @@ export default function Select({label, id, value, onChange, options = [], placeh
                         {selectedOption?.label || placeholder}
                     </span>
 
-                    <ChevronDown size={20} className="select-arrow" />
+                    <ChevronDown
+                        size={variant === "badge" ? 14 : 20}
+                        className="select-arrow"
+                    />
                 </button>
 
                 {isOpen && (
@@ -85,7 +95,9 @@ export default function Select({label, id, value, onChange, options = [], placeh
                                 key={option.value}
                                 type="button"
                                 role="option"
-                                aria-selected={String(value) === String(option.value)}
+                                aria-selected={
+                                    String(value) === String(option.value)
+                                }
                                 className={`select-option ${
                                     String(value) === String(option.value)
                                         ? "selected"
@@ -96,7 +108,7 @@ export default function Select({label, id, value, onChange, options = [], placeh
                                 <span>{option.label}</span>
 
                                 {String(value) === String(option.value) && (
-                                    <Check size={18} />
+                                    <Check size={variant === "badge" ? 14 : 18} />
                                 )}
                             </button>
                         ))}

@@ -1,0 +1,136 @@
+
+.tickets-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px 8%;
+}
+
+.tickets-container {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.tickets-container > h1 {
+    margin: 0 0 28px;
+    color: #101a33;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.tickets-tabs {
+    display: flex;
+    width: 100%;
+    gap: 24px;
+    border-bottom: 1px solid #dce3ef;
+    margin-bottom: 32px;
+}
+
+.tickets-tabs button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 14px 22px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+
+    color: #334155;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+}
+
+.tickets-tabs button:hover {
+    color: #315bd7;
+}
+
+.tickets-tabs button.active {
+    color: #315bd7;
+    border-bottom-color: #315bd7;
+    background: #eaf0ff;
+    border-radius: 10px 10px 0 0;
+}
+
+.tickets-tab-content {
+    margin-top: 24px;
+}
+
+
+.tickets-layout {
+    width: 100%;
+}
+
+.tickets-layout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.tickets-layout-header h2 {
+    margin: 0 0 6px;
+    color: #101a33;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.tickets-layout-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.tickets-count {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #eaf0ff;
+    color: #315bd7;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tickets-layout-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (max-width: 640px) {
+    .tickets-layout-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .tickets-page {
+        padding: 28px 16px;
+    }
+
+    .tickets-container > h1 {
+        font-size: 30px;
+    }
+
+    .tickets-tabs {
+        gap: 4px;
+        margin-bottom: 16px;
+        overflow-x: auto;
+    }
+
+    .tickets-tabs button {
+        padding: 12px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .tickets-tab-content {
+        margin-top: 16px;
+    }
+}
